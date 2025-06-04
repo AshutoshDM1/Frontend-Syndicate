@@ -20,7 +20,6 @@
 <a href="https://github.com/AshutoshDM1">
   <img src="https://github.com/AshutoshDM1.png" width="50px" alt="Ashutosh" style="border-radius:50%" />
 </a>
-<br>
 <a href="https://github.com/Divyue30597">
   <img src="https://github.com/Divyue30597.png" width="50px" alt="Divyue" style="border-radius:50%" />
 </a>

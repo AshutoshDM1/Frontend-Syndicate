@@ -1,15 +1,24 @@
-import { Welcome } from '../welcome/welcome';
-
+import { useEffect } from 'react';
+import { toast } from 'sonner';
+import Signup from '~/pages/Signup';
 export function meta() {
   return [
-    { title: 'Project Syndicate' },
+    { title: 'Pos - Login' },
     {
       name: 'description',
-      content: 'Welcome to Project Syndicate a Restructured POS system',
+      content: 'Welcome to Reztro a Restructured POS system',
     },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  useEffect(() => {
+    toast.success('I have Created this Page in 5 min ');
+  }, []);
+
+  return (
+    <>
+      <Signup />
+    </>
+  );
 }

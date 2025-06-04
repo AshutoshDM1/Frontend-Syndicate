@@ -9,6 +9,7 @@ import {
 
 import type { Route } from './+types/root';
 import './app.css';
+import { Toaster } from 'sonner';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -28,13 +29,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <title>Project Syndicate</title>
-        <meta name="description" content="Welcome to Project Syndicate a Restructured POS system" />
+        <title>Reztro</title>
+        <link rel="icon" href="/favicon.png" />
+        <meta name="description" content="Welcome to Reztro a Restructured POS system" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
+        <Toaster position="top-right" />
         {children}
         <ScrollRestoration />
         <Scripts />
