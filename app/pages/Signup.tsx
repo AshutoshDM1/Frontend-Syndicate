@@ -1,11 +1,7 @@
-import SignupDialog from '~/components/signup-components/signup-dialog';
+import SignupDialog from '~/modules/SignUp';
 
 const Signup = () => {
-  return (
-    <>
-      <SignupDialog />
-    </>
-  );
+  return <SignupDialog />;
 };
 
 export default Signup;
