@@ -9,6 +9,9 @@ const Dashboard = () => {
   const { signOut } = authClient;
   const { data: session } = useSession();
 
+  console.log("Dashboard session:", session);
+
+
   return (
     <>
       <div className="flex flex-col h-screen">

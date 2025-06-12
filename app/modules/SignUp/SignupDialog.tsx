@@ -5,10 +5,11 @@ import { SVG } from '~/constant/SVG';
 import { authClient, signIn } from '~/lib/auth-client';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router';
-import { Loader , User } from 'lucide-react';
+import { Loader, User } from 'lucide-react';
 import { Input } from '~/components/ui/input';
 
 const SignupDialog = () => {
+  const URL = import.meta.env.VITE_APP_URL;
   const [loadingEmail, setLoadingEmail] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingGithub, setLoadingGithub] = useState(false);
@@ -26,7 +27,7 @@ const SignupDialog = () => {
         password, // user password -> min 8 characters by default
         name: name, // user display name
         image: 'https://github.com/shadcn.png', // User image URL (optional)
-        callbackURL: '/dashboard', // A URL to redirect to after the user verifies their email (optional)
+        callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
       },
       {
         onRequest: () => {
@@ -51,13 +52,7 @@ const SignupDialog = () => {
     try {
       await signIn.social({
         provider: 'google',
-      }, {
-        onSuccess: () => {
-          navigate('/dashboard');
-        },
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        },
+        callbackURL: `${URL}/dashboard`,
       });
     } catch (error) {
       toast.error(error as string);
@@ -70,13 +65,7 @@ const SignupDialog = () => {
     try {
       await signIn.social({
         provider: 'github',
-      }, {
-        onSuccess: () => {
-          navigate('/dashboard');
-        },
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-        },
+        callbackURL: `${URL}/dashboard`,
       });
     } catch (error) {
       toast.error(error as string);
@@ -84,7 +73,6 @@ const SignupDialog = () => {
       setLoadingGithub(false);
     }
   };
-
 
   return (
     <>
