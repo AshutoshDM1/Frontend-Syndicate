@@ -1,50 +1,38 @@
-import image from '~/assets/signupImage.png';
+import image from '~/assets/loginImage.png';
 import { useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { SVG } from '~/constant/SVG';
-import { authClient, signIn } from '~/lib/auth-client';
+import { authClient } from '~/lib/auth-client';
 import { toast } from 'sonner';
 import { Link, useNavigate } from 'react-router';
-import { Loader, User } from 'lucide-react';
 import { Input } from '~/components/ui/input';
+import { Loader } from 'lucide-react';
 
-const SignupDialog = () => {
+const SignInDialog = () => {
   const URL = import.meta.env.VITE_APP_URL;
-  const [loadingEmail, setLoadingEmail] = useState(false);
   const [loadingGoogle, setLoadingGoogle] = useState(false);
   const [loadingGithub, setLoadingGithub] = useState(false);
-  const [name, setName] = useState('');
+  const [loadingEmail, setLoadingEmail] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signUp } = authClient;
+  const { signIn } = authClient;
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
     setLoadingEmail(true);
-    await signUp.email(
-      {
-        email, // user email address
-        password, // user password -> min 8 characters by default
-        name: name, // user display name
-        image: 'https://github.com/shadcn.png', // User image URL (optional)
-        callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
-      },
-      {
-        onRequest: () => {
-          toast.loading('Loading...');
-        },
-        onSuccess: () => {
-          toast.dismiss();
-          toast.success('Signup successful');
-          navigate('/dashboard');
-        },
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-          toast.dismiss();
-        },
-      }
-    );
-    setLoadingEmail(false);
+    try {
+      const { data, error } = await signIn.email({
+        email,
+        password,
+        callbackURL: `${URL}/dashboard`,
+      });
+      console.log(data, error);
+    } catch (error) {
+      console.log(error);
+      toast.error(error as string);
+    } finally {
+      setLoadingEmail(false);
+    }
   };
 
   const handleGoogleSignIn = async () => {
@@ -52,7 +40,7 @@ const SignupDialog = () => {
     try {
       await signIn.social({
         provider: 'google',
-        callbackURL: `${URL}/dashboard`,
+        callbackURL: `${URL}/dashboard`, // This is where users should go after auth
       });
     } catch (error) {
       toast.error(error as string);
@@ -60,12 +48,13 @@ const SignupDialog = () => {
       setLoadingGoogle(false);
     }
   };
+
   const handleGithubSignIn = async () => {
     setLoadingGithub(true);
     try {
       await signIn.social({
         provider: 'github',
-        callbackURL: `${URL}/dashboard`,
+        callbackURL: `${URL}/dashboard`, // This is where users should go after auth
       });
     } catch (error) {
       toast.error(error as string);
@@ -79,11 +68,11 @@ const SignupDialog = () => {
       <div className="flex min-h-screen w-full">
         {/* Left side with illustration */}
         <div className="hidden w-1/2 bg-gray-100 items-center justify-center p-8 lg:flex">
-          <div className="w-full">
+          <div className="w-full flex items-center justify-center">
             <img
               src={image}
               alt="Login illustration"
-              className="h-[500px] 2xl:h-[600px] object-cover"
+              className="h-[400px] 2xl:h-[500px] object-cover"
             />
           </div>
         </div>
@@ -93,26 +82,8 @@ const SignupDialog = () => {
           <div className="w-full max-w-md space-y-8">
             <div className="text-center flex justify-center items-center gap-5">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                Welcome To Restzo!{' '}
+                Login to your account
               </h1>
-              <h1 className="text-xl font-light tracking-tight text-gray-900"></h1>
-            </div>
-
-            <div>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-orange-500">
-                  <User />
-                </div>
-                <Input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="Enter your name"
-                  required
-                />
-              </div>
             </div>
             <div>
               <div className="relative">
@@ -159,7 +130,7 @@ const SignupDialog = () => {
               onClick={handleSignIn}
             >
               {loadingEmail && <Loader className="animate-spin" />}
-              {loadingEmail ? 'Signing Up...' : 'Sign Up'}
+              {loadingEmail ? 'Logging in...' : 'Login'}
             </Button>
             <div className="flex items-center justify-center">
               <div className="border-t border-gray-300 flex-grow"></div>
@@ -190,9 +161,9 @@ const SignupDialog = () => {
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <Link to="/login" className="font-medium text-orange-500 hover:text-orange-600">
-                  Login
+                Don&apos;t have an account?{' '}
+                <Link to="/signup" className="font-medium text-orange-500 hover:text-orange-600">
+                  Sign Up
                 </Link>
               </p>
             </div>
@@ -203,4 +174,4 @@ const SignupDialog = () => {
   );
 };
 
-export default SignupDialog;
+export default SignInDialog;

@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
-import { toast } from 'sonner';
-import Signup from '~/pages/Signup';
+import Landing from '~/modules/Landing/landing';
 export function meta() {
   return [
-    { title: 'Pos - Login' },
+    { title: 'Restzo' },
     {
       name: 'description',
       content: 'Welcome to Reztro a Restructured POS system',
@@ -12,13 +10,10 @@ export function meta() {
 }
 
 export default function Home() {
-  useEffect(() => {
-    toast.success('I have Created this Page in 5 min ');
-  }, []);
 
   return (
     <>
-      <Signup />
+      <Landing />
     </>
   );
 }
