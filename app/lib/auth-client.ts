@@ -1,11 +1,7 @@
 import { createAuthClient } from "better-auth/react"
 
-// Use environment variable or fallback to local development
-const URL = "https://pos-syndicate.elitedev.tech"
-// const URL = "https://backend-syndicate.onrender.com"
-// const URL = "http://localhost:2020"
-
-const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || URL
+const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:2020"
+console.log(VITE_BACKEND_URL)
 
 export const authClient = createAuthClient({
     baseURL: VITE_BACKEND_URL,
