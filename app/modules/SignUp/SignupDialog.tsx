@@ -17,9 +17,10 @@ const SignupDialog = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signUp } = authClient;
-  const navigate = useNavigate();
+  const [disabled, setDisabled] = useState(false);
 
   const handleSignIn = async () => {
+    setDisabled(true);
     setLoadingEmail(true);
     await signUp.email(
       {
@@ -29,25 +30,12 @@ const SignupDialog = () => {
         image: 'https://github.com/shadcn.png', // User image URL (optional)
         callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
       },
-      {
-        onRequest: () => {
-          toast.loading('Loading...');
-        },
-        onSuccess: () => {
-          toast.dismiss();
-          toast.success('Signup successful');
-          navigate('/dashboard');
-        },
-        onError: (ctx) => {
-          toast.error(ctx.error.message);
-          toast.dismiss();
-        },
-      }
     );
     setLoadingEmail(false);
   };
 
   const handleGoogleSignIn = async () => {
+    setDisabled(true);
     setLoadingGoogle(true);
     try {
       await signIn.social({
@@ -61,6 +49,7 @@ const SignupDialog = () => {
     }
   };
   const handleGithubSignIn = async () => {
+    setDisabled(true);
     setLoadingGithub(true);
     try {
       await signIn.social({
@@ -154,6 +143,7 @@ const SignupDialog = () => {
             </div>
 
             <Button
+              disabled={disabled}
               className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-md cursor-pointer"
               type="submit"
               onClick={handleSignIn}
@@ -168,24 +158,26 @@ const SignupDialog = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <button
+              <Button
+                disabled={disabled}
                 onClick={handleGoogleSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md cursor-pointer"
               >
                 {loadingGoogle && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.google />
                 Google
-              </button>
-              <button
+              </Button>
+              <Button
+                disabled={disabled}
                 onClick={handleGithubSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md cursor-pointer"
               >
                 {loadingGithub && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.github />
                 Github
-              </button>
+              </Button>
             </div>
 
             <div className="text-center">

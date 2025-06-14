@@ -16,10 +16,11 @@ const SignInDialog = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signIn } = authClient;
-  const navigate = useNavigate();
+  const [disabled, setDisabled] = useState(false);
 
   const handleSignIn = async () => {
     setLoadingEmail(true);
+    setDisabled(true);
     try {
       const { data, error } = await signIn.email({
         email,
@@ -37,11 +38,13 @@ const SignInDialog = () => {
 
   const handleGoogleSignIn = async () => {
     setLoadingGoogle(true);
+    setDisabled(true);
     try {
-      await signIn.social({
+      const { data, error } = await signIn.social({
         provider: 'google',
-        callbackURL: `${URL}/dashboard`, // This is where users should go after auth
+        callbackURL: `${URL}/dashboard`,
       });
+      console.log(data, error);
     } catch (error) {
       toast.error(error as string);
     } finally {
@@ -51,6 +54,7 @@ const SignInDialog = () => {
 
   const handleGithubSignIn = async () => {
     setLoadingGithub(true);
+    setDisabled(true);
     try {
       await signIn.social({
         provider: 'github',
@@ -125,6 +129,7 @@ const SignInDialog = () => {
             </div>
 
             <Button
+              disabled={disabled}
               className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-md cursor-pointer"
               type="submit"
               onClick={handleSignIn}
@@ -139,24 +144,26 @@ const SignInDialog = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <button
+              <Button
+                disabled={disabled}
                 onClick={handleGoogleSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md cursor-pointer"
               >
                 {loadingGoogle && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.google />
                 Google
-              </button>
-              <button
+              </Button>
+              <Button
+                disabled={disabled}
                 onClick={handleGithubSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md cursor-pointer"
               >
                 {loadingGithub && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.github />
                 Github
-              </button>
+              </Button>
             </div>
 
             <div className="text-center">

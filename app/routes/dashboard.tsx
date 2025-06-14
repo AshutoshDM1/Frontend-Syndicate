@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react';
+import { Heading1, LogOut } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { authClient, useSession } from '~/lib/auth-client';
@@ -9,8 +9,19 @@ const Dashboard = () => {
   const { signOut } = authClient;
   const { data: session } = useSession();
 
-  console.log("Dashboard session:", session);
-
+  const handleSignOut = () => {
+    if (session === null) {
+      navigate('/login'); // redirect to landing page
+    } else {
+      signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            navigate('/login'); // redirect to login page
+          },
+        },
+      });
+    }
+  };
 
   return (
     <>
@@ -28,17 +39,12 @@ const Dashboard = () => {
             <Button
               className="bg-orange-500 hover:bg-orange-600 hover:text-white text-white cursor-pointer"
               variant="outline"
-              onClick={() =>
-                signOut({
-                  fetchOptions: {
-                    onSuccess: () => {
-                      navigate('/login'); // redirect to login page
-                    },
-                  },
-                })
-              }
+              onClick={handleSignOut}
             >
+              {session ? (<>
+                <h1>Logout</h1>
               <LogOut />
+              </>) : <h1>Login</h1>}
             </Button>
           </div>
         </header>
