@@ -12,7 +12,7 @@ const handleError = (error: any) => {
     return Promise.reject(error);
 };
 
-const URL = 'http://localhost:2020';
+const URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:2020';
 
 const api = axios.create({
     baseURL: `${URL}/api/v1`,
