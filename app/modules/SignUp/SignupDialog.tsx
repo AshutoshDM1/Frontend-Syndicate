@@ -18,30 +18,44 @@ const SignupDialog = () => {
   const [password, setPassword] = useState('');
   const { signUp } = authClient;
   const [disabled, setDisabled] = useState(false);
-
+  const navigate = useNavigate();
   const handleSignIn = async () => {
     setDisabled(true);
     setLoadingEmail(true);
-    await signUp.email(
-      {
-        email, // user email address
-        password, // user password -> min 8 characters by default
-        name: name, // user display name
-        image: 'https://github.com/shadcn.png', // User image URL (optional)
-        callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
-      },
-    );
-    setLoadingEmail(false);
+    try {
+      const { data, error } = await signUp.email(
+        {
+          email, // user email address
+          password, // user password -> min 8 characters by default
+          name: name, // user display name
+          image: 'https://github.com/shadcn.png', // User image URL (optional)
+          callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
+        },
+      );
+      if (data) {
+        navigate('/dashboard');
+      }
+      if (error?.message) {
+        toast.error(error.message);
+      }
+    } catch (error) {
+      toast.error(error as string);
+    } finally {
+      setLoadingEmail(false);
+    }
   };
 
   const handleGoogleSignIn = async () => {
     setDisabled(true);
     setLoadingGoogle(true);
     try {
-      await signIn.social({
+      const { data, error } = await signIn.social({
         provider: 'google',
         callbackURL: `${URL}/dashboard`,
       });
+      if (error?.message) {
+        toast.error(error.message);
+      }
     } catch (error) {
       toast.error(error as string);
     } finally {
@@ -52,10 +66,13 @@ const SignupDialog = () => {
     setDisabled(true);
     setLoadingGithub(true);
     try {
-      await signIn.social({
+      const { data, error } = await signIn.social({
         provider: 'github',
         callbackURL: `${URL}/dashboard`,
       });
+      if (error?.message) {
+        toast.error(error.message);
+      }
     } catch (error) {
       toast.error(error as string);
     } finally {
@@ -67,12 +84,12 @@ const SignupDialog = () => {
     <>
       <div className="flex min-h-screen w-full">
         {/* Left side with illustration */}
-        <div className="hidden w-1/2 bg-gray-100 items-center justify-center p-8 lg:flex">
-          <div className="w-full">
+        <div className="hidden w-1/2 bg-gray-100 lg:flex items-center justify-center p-0 h-screen">
+          <div className="w-full h-full flex items-center justify-center">
             <img
-              src={image}
+              src="https://images.unsplash.com/photo-1504718855392-c0f33b372e72?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTl8fFJlc3RhdXJhbnR8ZW58MHx8MHx8fDA%3D"
               alt="Login illustration"
-              className="h-[500px] 2xl:h-[600px] object-cover"
+              className="object-cover object-center h-full w-full"
             />
           </div>
         </div>

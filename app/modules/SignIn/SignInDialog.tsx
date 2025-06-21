@@ -27,10 +27,12 @@ const SignInDialog = () => {
         password,
         callbackURL: `${URL}/dashboard`,
       });
-      console.log(data, error);
+      if (error?.message) {
+        toast.error(error.message);
+      }
     } catch (error) {
       console.log(error);
-      toast.error(error as string);
+      toast.error("Something went wrong");
     } finally {
       setLoadingEmail(false);
     }
@@ -44,9 +46,11 @@ const SignInDialog = () => {
         provider: 'google',
         callbackURL: `${URL}/dashboard`,
       });
-      console.log(data, error);
+      if (error?.message) {
+        toast.error(error.message);
+      }
     } catch (error) {
-      toast.error(error as string);
+      toast.error("Something went wrong");
     } finally {
       setLoadingGoogle(false);
     }
@@ -56,12 +60,15 @@ const SignInDialog = () => {
     setLoadingGithub(true);
     setDisabled(true);
     try {
-      await signIn.social({
+      const { data, error } = await signIn.social({
         provider: 'github',
         callbackURL: `${URL}/dashboard`, // This is where users should go after auth
       });
+      if (error?.message) {
+        toast.error(error.message);
+      }
     } catch (error) {
-      toast.error(error as string);
+      toast.error("Something went wrong");
     } finally {
       setLoadingGithub(false);
     }
@@ -71,12 +78,12 @@ const SignInDialog = () => {
     <>
       <div className="flex min-h-screen w-full">
         {/* Left side with illustration */}
-        <div className="hidden w-1/2 bg-gray-100 items-center justify-center p-8 lg:flex">
-          <div className="w-full flex items-center justify-center">
+        <div className="hidden w-1/2 bg-gray-100 lg:flex items-center justify-center p-0 h-screen">
+          <div className="w-full h-full flex items-center justify-center">
             <img
-              src={image}
+              src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fFJlc3RhdXJhbnR8ZW58MHx8MHx8fDA%3D"
               alt="Login illustration"
-              className="h-[400px] 2xl:h-[500px] object-cover"
+              className="object-cover object-center h-full w-full"
             />
           </div>
         </div>
@@ -130,7 +137,7 @@ const SignInDialog = () => {
 
             <Button
               disabled={disabled}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-md cursor-pointer"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-md cursor-pointer"
               type="submit"
               onClick={handleSignIn}
             >
