@@ -1,4 +1,3 @@
-import image from '~/assets/signupImage.png';
 import { useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { SVG } from '~/constant/SVG';

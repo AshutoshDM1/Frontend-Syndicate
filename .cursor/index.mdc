@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Frontend Syndicate
+
+This is a React-based frontend for a Restaurant POS System using React Router v7, TypeScript, and TailwindCSS.
+
+## Key Information
+- **Project Type**: Restaurant POS System Frontend
+- **Tech Stack**: React 19, React Router 7, TypeScript, TailwindCSS 
+- **UI Components**: Custom UI components with Shadcn UI
+- **Styling**: TailwindCSS utility-first approach
+
+## Core Principles
+- Use functional components with hooks
+- Maintain type safety with TypeScript
+- Follow component composition patterns
+- Implement responsive design
+- Ensure accessibility standards
+- Always use latest Shadcn Components
+
+## Project Structure
+- `/app`: Main application code
+  - `/components`: Reusable UI components
+  - `/modules`: Feature-specific components
+  - `/routes`: Route components and layouts
+  - `/services`: API service functions
+  - `/lib`: Utility functions and hooks
+  - `/constant`: Constants and configuration
+
+## When generating code:
+1. Use functional components with TypeScript
+2. Follow the established component patterns
+3. Use TailwindCSS for styling
+4. Implement proper error handling for API calls
+5. Ensure components are responsive and accessible
+
