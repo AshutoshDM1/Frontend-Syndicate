@@ -1,0 +1,133 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# React Component Design Patterns
+
+## Component Structure
+- Use functional components with TypeScript
+- Define props interface at the top of the file
+- Use destructuring for props
+- Export components as named exports
+
+Example:
+```tsx
+interface ButtonProps {
+  variant?: "primary" | "secondary" | "outline";
+  size?: "sm" | "md" | "lg";
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+export function Button({
+  variant = "primary",
+  size = "md",
+  children,
+  onClick,
+  disabled = false,
+}: ButtonProps) {
+  // Component implementation
+  return (
+    <button
+      className={cn(
+        "rounded-md font-medium transition-colors",
+        // Variant styles
+        variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/90",
+        variant === "secondary" && "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+        variant === "outline" && "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        // Size styles
+        size === "sm" && "h-8 px-3 text-xs",
+        size === "md" && "h-10 px-4 py-2",
+        size === "lg" && "h-11 px-8",
+        // Disabled styles
+        disabled && "opacity-50 cursor-not-allowed"
+      )}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## Component Organization
+- Keep components focused on a single responsibility
+- Extract complex logic to custom hooks
+- Separate presentation from business logic
+- Use composition over inheritance
+
+## State Management
+- Use `useState` for simple component state
+- Use `useReducer` for complex state logic
+- Extract reusable state logic to custom hooks
+- Consider context for shared state across components
+
+Example custom hook:
+```tsx
+function useToggle(initialValue = false) {
+  const [value, setValue] = useState(initialValue);
+  
+  const toggle = useCallback(() => {
+    setValue(prev => !prev);
+  }, []);
+  
+  return [value, toggle] as const;
+}
+```
+
+## Data Fetching
+- Use async functions for data fetching
+- Handle loading, error, and success states
+- Use React Router loaders when appropriate
+- Extract data fetching logic to services or custom hooks
+
+Example:
+```tsx
+function useUsers() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    async function fetchUsers() {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const response = await api.getUsers();
+        setUsers(response.data);
+      } catch (err) {
+        setError("Failed to fetch users");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    fetchUsers();
+  }, []);
+  
+  return { users, isLoading, error };
+}
+```
+
+## Event Handling
+- Define event handlers within the component or as custom hooks
+- Use TypeScript for proper event typing
+- Prefer explicit event handlers over inline functions for complex logic
+
+## Performance Optimization
+- Use `React.memo` for components that render often with the same props
+- Use `useCallback` for functions passed as props
+- Use `useMemo` for expensive calculations
+- Use proper dependency arrays in hooks
+
+## Styling
+- Use Tailwind CSS for styling
+- Use `cn` utility for conditional class names
+- Follow the project's design system
+- Use consistent spacing and layout patterns
+

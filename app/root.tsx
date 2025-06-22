@@ -10,6 +10,7 @@ import {
 import type { Route } from './+types/root';
 import './app.css';
 import { Toaster } from 'sonner';
+import { ThemeProvider } from './components/theme-provider';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -35,12 +36,43 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  // Only run in the browser
+                  if (typeof window === 'undefined') return;
+                  
+                  var theme = localStorage.getItem('vite-ui-theme') || 'light';
+                  var root = document.documentElement;
+                  
+                  root.classList.remove('light', 'dark');
+                  
+                  if (theme === 'system') {
+                    var systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    root.classList.add(systemTheme);
+                  } else {
+                    root.classList.add(theme);
+                  }
+                } catch (e) {
+                  // Fallback to light theme if there's an error
+                  if (typeof document !== 'undefined') {
+                    document.documentElement.classList.add('light');
+                  }
+                }
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className="light">
-        <Toaster position="top-right" />
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+      <body>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+          {children}
+          <Toaster position="top-right" />
+          <ScrollRestoration />
+          <Scripts />
+        </ThemeProvider>
       </body>
     </html>
   );

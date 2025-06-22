@@ -64,65 +64,71 @@ body {
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.21 0.006 285.885);
+  /* Primary Orange (#FF6900) */
+  --primary: #ff6900;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
+  /* Secondary Black (#18181B) */
+  --secondary: #18181b;
+  --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.967 0.001 286.375);
   --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
+  --accent: #ff6900;
+  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --ring: #ff6900;
+  /* Chart colors using your orange theme */
+  --chart-1: #ff6900;
+  --chart-2: #18181b;
+  --chart-3: #ff8a33;
+  --chart-4: #ffab66;
+  --chart-5: #ff5500;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.21 0.006 285.885);
+  --sidebar-primary: #ff6900;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-accent-foreground: #18181b;
   --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+  --sidebar-ring: #ff6900;
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
+  --background: #18181b;
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.21 0.006 285.885);
+  --card: #27272a;
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.21 0.006 285.885);
+  --popover: #27272a;
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
-  --secondary: oklch(0.274 0.006 286.033);
+  /* Primary Orange remains the same in dark mode */
+  --primary: #ff6900;
+  --primary-foreground: oklch(0.985 0 0);
+  /* Secondary remains dark in dark mode */
+  --secondary: #27272a;
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
+  --muted: #27272a;
   --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
+  --accent: #ff6900;
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
+  --ring: #ff6900;
+  /* Chart colors for dark mode */
+  --chart-1: #ff6900;
+  --chart-2: #3f3f46;
+  --chart-3: #ff8a33;
+  --chart-4: #ffab66;
+  --chart-5: #ff5500;
+  --sidebar: #18181b;
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: #ff6900;
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent: #27272a;
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.552 0.016 285.938);
+  --sidebar-ring: #ff6900;
 }
 
 @layer base {
@@ -131,5 +137,173 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Custom Primary Orange (#FF6900) utilities */
+  .bg-primary-orange {
+    @apply bg-primary;
+  }
+  .text-primary-orange {
+    @apply text-primary;
+  }
+  .border-primary-orange {
+    @apply border-primary;
+  }
+  .ring-primary-orange {
+    @apply ring-primary;
+  }
+
+  /* Custom Secondary Black (#18181B) utilities */
+  .bg-secondary-black {
+    @apply bg-secondary;
+  }
+  .text-secondary-black {
+    @apply text-secondary;
+  }
+  .border-secondary-black {
+    @apply border-secondary;
+  }
+
+  /* Gradient utilities */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #ff8a33 100%);
+  }
+  .bg-gradient-secondary {
+    background: linear-gradient(135deg, var(--secondary) 0%, #27272a 100%);
+  }
+
+  /* Hover utilities */
+  .hover-primary {
+    @apply hover:bg-primary hover:text-primary-foreground transition-colors;
+  }
+  .hover-secondary {
+    @apply hover:bg-secondary hover:text-secondary-foreground transition-colors;
+  }
+
+  /* custom scrollbar */
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #8a8a8ac0;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    cursor: pointer;
+    transition: all;
+    transition-duration: 600ms;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(66, 66, 66, 0.842);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+
+  /* custom scrollbar for dark mode */
+  .custom-scrollbar-main::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .custom-scrollbar-main::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 2px;
+  }
+
+  .custom-scrollbar-main::-webkit-scrollbar-thumb {
+    background-color: #8a8a8ac0;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+    cursor: pointer;
+    transition: all;
+    transition-duration: 600ms;
+  }
+
+  .custom-scrollbar-main::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(66, 66, 66, 0.842);
+  }
+
+  .custom-scrollbar-main::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Mobile Navigation Utilities */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Mobile-specific responsive utilities */
+  @media (max-width: 1024px) {
+    .mobile-nav-spacing {
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Backdrop blur support */
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Enhanced mobile navigation animations */
+  .mobile-nav-item {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .mobile-nav-item:active {
+    @apply scale-95;
+  }
+
+  /* Bottom sheet improvements */
+  .bottom-sheet-content {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+
+  /* Mobile navigation hover effects */
+  @media (hover: hover) {
+    .mobile-nav-hover:hover {
+      @apply bg-primary/10 text-primary;
+    }
+  }
+
+  /* Touch-friendly mobile navigation */
+  @media (max-width: 1024px) {
+    .mobile-touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 }

@@ -1,10 +1,9 @@
-import image from '~/assets/loginImage.png';
 import { useState } from 'react';
 import { Button } from '../../components/ui/button';
 import { SVG } from '~/constant/SVG';
 import { authClient } from '~/lib/auth-client';
 import { toast } from 'sonner';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { Input } from '~/components/ui/input';
 import { Loader } from 'lucide-react';
 
@@ -22,7 +21,7 @@ const SignInDialog = () => {
     setLoadingEmail(true);
     setDisabled(true);
     try {
-      const { data, error } = await signIn.email({
+      const { error } = await signIn.email({
         email,
         password,
         callbackURL: `${URL}/dashboard`,
@@ -42,7 +41,7 @@ const SignInDialog = () => {
     setLoadingGoogle(true);
     setDisabled(true);
     try {
-      const { data, error } = await signIn.social({
+      const { error } = await signIn.social({
         provider: 'google',
         callbackURL: `${URL}/dashboard`,
       });
@@ -60,7 +59,7 @@ const SignInDialog = () => {
     setLoadingGithub(true);
     setDisabled(true);
     try {
-      const { data, error } = await signIn.social({
+      const { error } = await signIn.social({
         provider: 'github',
         callbackURL: `${URL}/dashboard`, // This is where users should go after auth
       });

@@ -1,0 +1,214 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# API Integration and Data Fetching Patterns
+
+## API Service Structure
+- Organize API calls by domain in the `services` directory
+- Use axios for HTTP requests
+- Create typed interfaces for request and response data
+- Handle errors consistently
+
+## Base API Setup
+The project uses axios for API requests. The base setup is in `app/services/api.ts`.
+
+Example:
+```typescript
+// app/services/api.ts
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:2020/api/v1';
+
+export const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor for adding auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response interceptor for handling errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle specific error codes
+    if (error.response?.status === 401) {
+      // Handle unauthorized (e.g., redirect to login)
+      localStorage.removeItem('token');
+      window.location.href = '/signin';
+    }
+    return Promise.reject(error);
+  }
+);
+```
+
+## Service Functions
+- Create service functions for each API endpoint
+- Use TypeScript interfaces for request and response types
+- Return the entire response or just the data based on your needs
+
+Example user service:
+```typescript
+// app/services/user.service.ts
+import { api } from './api';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  image?: string;
+}
+
+export interface CreateUserRequest {
+  name: string;
+  email: string;
+  password: string;
+  role?: string;
+}
+
+export interface UpdateUserRequest {
+  name?: string;
+  email?: string;
+  image?: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+  error?: string;
+}
+
+export const userService = {
+  getUsers: async () => {
+    const response = await api.get<ApiResponse<User[]>>('/users');
+    return response.data;
+  },
+  
+  getUserById: async (id: string) => {
+    const response = await api.get<ApiResponse<User>>(`/users/${id}`);
+    return response.data;
+  },
+  
+  createUser: async (userData: CreateUserRequest) => {
+    const response = await api.post<ApiResponse<User>>('/users', userData);
+    return response.data;
+  },
+  
+  updateUser: async (id: string, userData: UpdateUserRequest) => {
+    const response = await api.patch<ApiResponse<User>>(`/users/${id}`, userData);
+    return response.data;
+  },
+  
+  deleteUser: async (id: string) => {
+    const response = await api.delete<ApiResponse<null>>(`/users/${id}`);
+    return response.data;
+  }
+};
+```
+
+## Error Handling
+- Create a consistent error handling pattern
+- Extract error messages from API responses
+- Provide meaningful feedback to users
+
+Example error handling:
+```typescript
+// app/lib/error-handling.ts
+import { AxiosError } from 'axios';
+
+interface ApiErrorResponse {
+  success: false;
+  message: string;
+  error: string;
+}
+
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof AxiosError) {
+    // API error with response
+    if (error.response?.data) {
+      const errorData = error.response.data as ApiErrorResponse;
+      return errorData.error || errorData.message || 'An error occurred';
+    }
+    // Network error
+    if (error.request) {
+      return 'Network error. Please check your connection.';
+    }
+  }
+  
+  // Fallback error message
+  return error instanceof Error ? error.message : 'An unexpected error occurred';
+}
+```
+
+## Data Fetching Hooks
+- Create custom hooks for data fetching operations
+- Handle loading, error, and success states
+- Implement proper TypeScript typing
+
+Example custom hook:
+```typescript
+// app/lib/hooks/use-users.ts
+import { useState, useEffect } from 'react';
+import { userService, User } from '../../services/user.service';
+import { getErrorMessage } from '../error-handling';
+
+export function useUsers() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  async function fetchUsers() {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await userService.getUsers();
+      setUsers(response.data);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+  
+  return {
+    users,
+    isLoading,
+    error,
+    refetch: fetchUsers
+  };
+}
+```
+
+## Authentication
+- Handle authentication state consistently
+- Store tokens securely
+- Implement proper login/logout functionality
+- Use auth context for global access to auth state
+
+## Best Practices
+- Use environment variables for API URLs
+- Implement request caching when appropriate
+- Add request timeout handling
+- Consider implementing retry logic for failed requests
+

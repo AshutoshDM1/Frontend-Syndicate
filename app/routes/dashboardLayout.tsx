@@ -1,10 +1,9 @@
-import { Heading1, LogOut } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '~/components/ui/avatar';
-import { Button } from '~/components/ui/button';
+import { Home, Settings, ShoppingCart, User } from 'lucide-react';
 import { authClient, useSession } from '~/lib/auth-client';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import Sidebar from '~/modules/Dashboard/Sidebar';
 import Dashboard from '~/modules/Dashboard/Dashboard';
+import { TubelightNavbar } from '~/components/ui/tubelight-navbar';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -25,42 +24,25 @@ const DashboardLayout = () => {
     }
   };
 
+
+  const navItems = [
+    { name: 'Dashboard', url: '/dashboard/', icon: Home },
+    { name: 'Users', url: '/dashboard/manage-user', icon: User },
+    { name: 'Orders', url: '/dashboard/quick-order', icon: ShoppingCart },
+    { name: 'Themes', url: '/dashboard', icon: Settings },
+  ];
+
   const location = useLocation();
   const isAtParentRoute = location.pathname === '/dashboard' || location.pathname === '/dashboard/';
 
   return (
     <>
-      <div className="flex flex-col h-screen">
-        <header className="w-full flex justify-between items-center bg-white border-b border-gray-200 py-4 px-8">
-          <h1 className="text-xl font-bold">✨ Welcome to Restzo</h1>
-          <div className="flex items-center gap-4">
-            {session && <h1>{session?.user?.name}</h1>}
-            {session?.user?.image && (
-              <Avatar className="cursor-pointer">
-                <AvatarImage src={session?.user?.image} />
-                <AvatarFallback>{session?.user?.name?.charAt(0)}</AvatarFallback>
-              </Avatar>
-            )}
-            <Button
-              className="bg-orange-500 hover:bg-orange-600 hover:text-white text-white cursor-pointer"
-              variant="outline"
-              onClick={handleSignOut}
-            >
-              {session ? (
-                <>
-                  <h1>Logout</h1>
-                  <LogOut />
-                </>
-              ) : (
-                <h1>Login</h1>
-              )}
-            </Button>
-          </div>
-        </header>
+      <div className="flex flex-col h-screen bg-background">
         <div className="flex flex-1 overflow-hidden">
+        <TubelightNavbar items={navItems} />  
           {/* Sidebar */}
           <Sidebar />
-          <div className="flex-1 overflow-auto p-6 bg-gray-50">
+          <div className="flex-1 overflow-auto p-6 bg-muted/30 custom-scrollbar-main pb-2 pt-14">
             {isAtParentRoute ? (
               <Dashboard />
             ) : (

@@ -1,0 +1,85 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Frontend Syndicate - Restaurant POS System
+
+## Project Overview
+- React-based frontend for a Restaurant POS System
+- Uses React Router for routing
+- TypeScript for type safety
+- TailwindCSS for styling
+- Modern React patterns with hooks and functional components
+
+## Architecture Guidelines
+
+### Project Structure
+- `/app`: Main application code
+- `/app/components`: Reusable UI components
+- `/app/modules`: Feature-specific components organized by domain
+- `/app/routes`: Route components and layouts
+- `/app/lib`: Utility functions and hooks
+- `/app/services`: API service functions
+- `/app/constant`: Constants and configuration
+
+### Component Organization
+- Use a modular approach with domain-specific folders
+- Separate presentation components from container/logic components
+- Keep components focused on a single responsibility
+- Use composition over inheritance
+
+## UI Components
+- Use the existing UI component library in `/app/components/ui`
+- Follow the established design patterns for consistency
+- Utilize Tailwind CSS for styling
+- Use Radix UI primitives for complex interactive components
+
+## Routing
+- Use React Router for navigation
+- Define routes in `app/routes.ts`
+- Implement proper layouts in `app/routes/`
+- Use route loaders for data fetching when appropriate
+
+## State Management
+- Use React hooks for local component state
+- Consider context API for shared state when needed
+- Keep state as close as possible to where it's used
+- Minimize prop drilling through appropriate component composition
+
+## API Integration
+- Use the service functions in `app/services/` for API calls
+- Handle loading, error, and success states appropriately
+- Implement proper error handling and user feedback
+- Use TypeScript interfaces for API request/response types
+
+## Coding Standards
+
+### TypeScript
+- Use proper TypeScript types for all variables, props, and state
+- Create interfaces for component props
+- Avoid using `any` type
+- Use type inference when possible to reduce verbosity
+
+### Component Patterns
+- Use functional components with hooks
+- Destructure props for clarity
+- Use named exports for components
+- Follow consistent naming conventions:
+  - Components: PascalCase
+  - Hooks: camelCase starting with "use"
+  - Utilities: camelCase
+
+### Styling
+- Use Tailwind CSS for styling
+- Follow the project's design system
+- Use utility classes over custom CSS when possible
+- Use consistent spacing and layout patterns
+
+## Best Practices
+- Implement responsive design for all components
+- Ensure proper accessibility (ARIA attributes, keyboard navigation)
+- Write clear comments for complex logic
+- Follow DRY (Don't Repeat Yourself) principle
+- Optimize rendering performance with memoization when appropriate
+
