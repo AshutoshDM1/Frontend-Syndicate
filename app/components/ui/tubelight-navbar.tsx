@@ -18,24 +18,12 @@ interface TubelightNavbarProps {
 
 export function TubelightNavbar({ items, className }: TubelightNavbarProps) {
   const [activeTab, setActiveTab] = useState(items[items.length - 1].name);
-  // const [isMobile, setIsMobile] = useState(false);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
-
-  //   handleResize();
-  //   window.addEventListener('resize', handleResize);
-  //   return () => window.removeEventListener('resize', handleResize);
-  // }, []);
-
-  console.log(activeTab);
   return (
     <>
       <div
         className={cn(
-          'fixed bottom-0 sm:top-0 left-[50%] lg:left-[55%] -translate-x-1/2 z-50 mb-6 sm:pt-4',
+          'fixed top-0 sm:top-0 left-[50%] lg:left-[55%] -translate-x-1/2 z-50 mb-6 sm:pt-4',
           className
         )}
       >

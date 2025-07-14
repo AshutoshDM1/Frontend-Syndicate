@@ -3,19 +3,19 @@ import { ChevronDown, Play } from 'lucide-react';
 
 const Landing = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Navigation */}
-      <header className="bg-white py-4 border-b border-gray-200">
+      <header className="bg-background py-4 border-b border-border">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <img src="/favicon.png" alt="Restzo" className="h-6 w-auto" />
-            <span className="ml-2 text-lg font-medium text-gray-900">Restzo</span>
+            <span className="ml-2 text-lg font-medium text-foreground">Restzo</span>
           </Link>
           <div className="flex items-center">
             <div className="hidden :flex ml-10 space-x-12">
               <Link
                 to="/products"
-                className="text-sm font-medium flex items-center gap-2 text-gray-500 hover:text-gray-900"
+                className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
                   <ChevronDown />
@@ -24,7 +24,7 @@ const Landing = () => {
               </Link>
               <Link
                 to="/solutions"
-                className="text-sm font-medium flex items-center gap-2 text-gray-500 hover:text-gray-900"
+                className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
                   <ChevronDown />
@@ -33,7 +33,7 @@ const Landing = () => {
               </Link>
               <Link
                 to="/learn"
-                className="text-sm font-medium flex items-center gap-2 text-gray-500 hover:text-gray-900"
+                className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
                   <ChevronDown />
@@ -42,7 +42,7 @@ const Landing = () => {
               </Link>
               <Link
                 to="/blog"
-                className="text-sm font-medium flex items-center gap-2 text-gray-500 hover:text-gray-900"
+                className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
                   <ChevronDown />
@@ -55,7 +55,7 @@ const Landing = () => {
             <div className="hidden sm:flex items-center justify-end md:flex-1 lg:w-0">
               <Link
                 to="/login"
-                className="whitespace-nowrap text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center gap-2"
+                className="whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2"
               >
                 Login
               </Link>
@@ -103,7 +103,7 @@ const Landing = () => {
       </section>
 
       {/* Social Proof */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-muted/30">
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center mb-6">
             <div className="flex">
@@ -124,26 +124,26 @@ const Landing = () => {
             <br />
             Over 150,000 Businesses.
           </h2>
-          <p className="text-gray-600 mb-10 max-w-2xl mx-auto">
+          <p className="text-muted-foreground mb-10 max-w-2xl mx-auto">
             Our comprehensive POS system streamlines operations, enhances customer experience, and
             boosts your bottom line.
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center">
             <div className="text-center">
-              <p className="font-medium text-gray-500">Cash Management</p>
+              <p className="font-medium text-muted-foreground">Cash Management</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-gray-500">Contactless</p>
+              <p className="font-medium text-muted-foreground">Contactless</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-gray-500">24/7 POS</p>
+              <p className="font-medium text-muted-foreground">24/7 POS</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-gray-500">Reports</p>
+              <p className="font-medium text-muted-foreground">Reports</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-gray-500">Stocks</p>
+              <p className="font-medium text-muted-foreground">Stocks</p>
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@ const Landing = () => {
               <br />
               Potential With Our Guidance
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Streamline your restaurant operations with our advanced POS system designed
               specifically for the hospitality industry.
             </p>
@@ -167,7 +167,7 @@ const Landing = () => {
           <div className="grid md:grid-cols-2 gap-16">
             <div>
               <h3 className="text-xl font-bold mb-4">Sales Management</h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 Track sales in real-time, manage orders efficiently, and optimize your menu
                 performance with our intuitive dashboard.
               </p>
@@ -180,7 +180,7 @@ const Landing = () => {
 
             <div>
               <h3 className="text-xl font-bold mb-4">Inventory Management</h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 Keep track of your stock levels, receive low inventory alerts, and manage suppliers
                 all in one place.
               </p>
@@ -194,7 +194,7 @@ const Landing = () => {
 
           <div className="mt-16">
             <h3 className="text-xl font-bold mb-4">Analytics & Reporting</h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-muted-foreground mb-6">
               Gain valuable insights with comprehensive reports on sales, inventory, staff
               performance, and customer preferences.
             </p>
@@ -208,7 +208,7 @@ const Landing = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">
@@ -234,26 +234,26 @@ const Landing = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-muted/30 p-6 rounded-lg shadow border border-border ">
               <h3 className="text-lg font-bold mb-3">Customized Order Programs</h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Tailor your ordering system to match your business needs with customizable menus and
                 order flows.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-muted/30 p-6 rounded-lg shadow border border-border ">
               <h3 className="text-lg font-bold mb-3">Online Orders</h3>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Seamlessly integrate online ordering with your in-store POS system for unified
                 operations.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-muted/30 p-6 rounded-lg shadow border border-border ">
               <h3 className="text-lg font-bold mb-3">CRM Integration</h3>
 
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Connect customer data across platforms to deliver personalized experiences and
                 targeted marketing.
               </p>
@@ -273,7 +273,7 @@ const Landing = () => {
               <br />
               Thrive In The Digital Age.
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Join thousands of satisfied customers who have transformed their operations with our
               comprehensive POS solution.
             </p>
@@ -327,7 +327,7 @@ const Landing = () => {
       </section>
 
       {/* Testimonial Quote */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-muted/30"> 
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold mb-8">
@@ -344,7 +344,7 @@ const Landing = () => {
               </div>
               <div className="text-left">
                 <p className="font-bold">Camilla Rios</p>
-                <p className="text-gray-600 text-sm">Restaurant Owner</p>
+                <p className="text-muted-foreground text-sm">Restaurant Owner</p>
               </div>
             </div>
           </div>
@@ -368,7 +368,7 @@ const Landing = () => {
                 <br />
                 -Boost Sales
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 Upgrade Your Business Through Seamless Order Management, Inventory Tracking, and
                 Detailed Analytics
               </p>
@@ -384,7 +384,7 @@ const Landing = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">
@@ -395,37 +395,43 @@ const Landing = () => {
           </div>
 
           <div className="flex justify-center mb-8">
-            <div className="bg-white rounded-lg shadow-lg p-4 flex items-center w-full max-w-md">
+            <div className="bg-background rounded-lg shadow-lg p-4 flex items-center w-full max-w-md">
               <input
                 type="email"
                 placeholder="Enter your email"
                 className="flex-1 p-2 border-none outline-none"
               />
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md">Subscribe</button>
+              <button className="bg-orange-500 text-white px-4 py-2 rounded-md">Subscribe</button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-gray-200">
+      <footer className="py-12 border-t border-border">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
             <div>
               <h3 className="font-bold mb-4">Company</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/about" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link to="/about" className="text-muted-foreground hover:text-foreground text-sm">
                     About Us
                   </Link>
                 </li>
                 <li>
-                  <Link to="/careers" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/careers"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Careers
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/contact"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Contact
                   </Link>
                 </li>
@@ -436,17 +442,23 @@ const Landing = () => {
               <h3 className="font-bold mb-4">Products</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/pos" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link to="/pos" className="text-muted-foreground hover:text-foreground text-sm">
                     POS System
                   </Link>
                 </li>
                 <li>
-                  <Link to="/inventory" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/inventory"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Inventory
                   </Link>
                 </li>
                 <li>
-                  <Link to="/analytics" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/analytics"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Analytics
                   </Link>
                 </li>
@@ -457,38 +469,50 @@ const Landing = () => {
               <h3 className="font-bold mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/blog" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link to="/blog" className="text-muted-foreground hover:text-foreground text-sm">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link to="/guides" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/guides"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Guides
                   </Link>
                 </li>
                 <li>
-                  <Link to="/webinars" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/webinars"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Webinars
                   </Link>
                 </li>
               </ul>
             </div>
 
-            <div>
+            <div  >
               <h3 className="font-bold mb-4">Company</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/privacy" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/privacy"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Privacy
                   </Link>
                 </li>
                 <li>
-                  <Link to="/terms" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link to="/terms" className="text-muted-foreground hover:text-foreground text-sm">
                     Terms
                   </Link>
                 </li>
                 <li>
-                  <Link to="/security" className="text-gray-600 hover:text-gray-900 text-sm">
+                  <Link
+                    to="/security"
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                  >
                     Security
                   </Link>
                 </li>
@@ -499,16 +523,16 @@ const Landing = () => {
               <h3 className="font-bold mb-4">Contact</h3>
               <ul className="space-y-2">
                 <li>
-                  <span className="text-gray-600 text-sm">info@tumbas.com</span>
+                  <span className="text-muted-foreground text-sm">info@tumbas.com</span>
                 </li>
                 <li>
-                  <span className="text-gray-600 text-sm">+1 (555) 123-4567</span>
+                  <span className="text-muted-foreground text-sm">+1 (555) 123-4567</span>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-gray-200 text-center text-sm text-gray-600">
+          <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} Tumbas POS. All rights reserved.</p>
           </div>
         </div>
