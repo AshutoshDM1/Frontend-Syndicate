@@ -31,7 +31,7 @@ const SignInDialog = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     } finally {
       setLoadingEmail(false);
     }
@@ -49,7 +49,7 @@ const SignInDialog = () => {
         toast.error(error.message);
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     } finally {
       setLoadingGoogle(false);
     }
@@ -67,7 +67,7 @@ const SignInDialog = () => {
         toast.error(error.message);
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error('Something went wrong');
     } finally {
       setLoadingGithub(false);
     }
@@ -75,7 +75,7 @@ const SignInDialog = () => {
 
   return (
     <>
-      <div className="flex min-h-screen w-full">
+      <div className="flex min-h-screen bg-background w-full">
         {/* Left side with illustration */}
         <div className="hidden w-1/2 bg-gray-100 lg:flex items-center justify-center p-0 h-screen">
           <div className="w-full h-full flex items-center justify-center">
@@ -91,7 +91,7 @@ const SignInDialog = () => {
         <div className="flex w-full lg:w-1/2 items-center justify-center p-8">
           <div className="w-full max-w-md space-y-8">
             <div className="text-center flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">
                 Login to your account
               </h1>
             </div>
@@ -105,7 +105,7 @@ const SignInDialog = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                  className="w-full pl-10 pr-4 py-3 border  rounded-md focus:ring-orange-500 focus:border-orange-500"
                   placeholder="Email Address"
                   required
                 />
@@ -122,7 +122,7 @@ const SignInDialog = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                  className="w-full pl-10 pr-4 py-3 border rounded-md focus:ring-orange-500 focus:border-orange-500"
                   placeholder="Password"
                   required
                 />
@@ -144,9 +144,9 @@ const SignInDialog = () => {
               {loadingEmail ? 'Logging in...' : 'Login'}
             </Button>
             <div className="flex items-center justify-center">
-              <div className="border-t border-gray-300 flex-grow"></div>
-              <span className="px-4 text-gray-500 text-sm">Or</span>
-              <div className="border-t border-gray-300 flex-grow"></div>
+              <div className="border-t border-border flex-grow"></div>
+              <span className="px-4 text-muted-foreground text-sm">Or</span>
+              <div className="border-t border-border flex-grow"></div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -154,7 +154,7 @@ const SignInDialog = () => {
                 disabled={disabled}
                 onClick={handleGoogleSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 bg-secondary hover:bg-foreground/20 rounded-md cursor-pointer"
               >
                 {loadingGoogle && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.google />
@@ -164,7 +164,7 @@ const SignInDialog = () => {
                 disabled={disabled}
                 onClick={handleGithubSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 border-gray-300 rounded-md cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 bg-secondary hover:bg-foreground/20 rounded-md cursor-pointer"
               >
                 {loadingGithub && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.github />
@@ -173,7 +173,7 @@ const SignInDialog = () => {
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Don&apos;t have an account?{' '}
                 <Link to="/signup" className="font-medium text-orange-500 hover:text-orange-600">
                   Sign Up
