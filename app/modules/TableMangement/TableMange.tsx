@@ -1,67 +1,34 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
-import { cn } from '~/lib/utils';
-import TableSVG from '~/components/TableSVG';
-
-// Types for table management in POS
-type TableStatus = 'available' | 'occupied' | 'reserved' | 'ordering' | 'needs-cleaning';
-type TableSize = 'small' | 'medium' | 'large';
-
-interface Table {
-  id: string;
-  number: string;
-  status: TableStatus;
-  size: TableSize;
-  orderStartTime?: string;
-  orderId?: string;
-  customerCount?: number;
-  floor: number;
-  totalAmount?: number;
-  orderItems?: number;
-}
-
-// Mock data - replace with actual data from your backend
-const mockTables: Table[] = [
-  // 1st Floor
-  { id: '1', number: 'A1', status: 'available', size: 'medium', floor: 1 },
-  { id: '2', number: 'A2', status: 'occupied', size: 'small', floor: 1, orderStartTime: '14:30', orderId: 'ORD-001', customerCount: 2, totalAmount: 45.50, orderItems: 3 },
-  { id: '3', number: 'A3', status: 'reserved', size: 'large', floor: 1, orderStartTime: '15:00', customerCount: 6 },
-  { id: '4', number: 'A4', status: 'available', size: 'medium', floor: 1 },
-  { id: '5', number: 'A5', status: 'available', size: 'medium', floor: 1 },
-  { id: '6', number: 'A6', status: 'ordering', size: 'medium', floor: 1, orderId: 'ORD-002', customerCount: 4, orderStartTime: '14:45' },
-  { id: '7', number: 'A7', status: 'occupied', size: 'small', floor: 1, orderStartTime: '13:30', orderId: 'ORD-003', customerCount: 2, totalAmount: 32.00, orderItems: 5 },
-  { id: '8', number: 'A8', status: 'needs-cleaning', size: 'medium', floor: 1 },
-  { id: '9', number: 'A9', status: 'available', size: 'large', floor: 1 },
-  { id: '10', number: 'A10', status: 'available', size: 'medium', floor: 1 },
-  { id: '11', number: 'A11', status: 'ordering', size: 'medium', floor: 1, orderId: 'ORD-004', customerCount: 3, orderStartTime: '15:15' },
-  { id: '12', number: 'A12', status: 'available', size: 'medium', floor: 1 },
-  { id: '13', number: 'A13', status: 'occupied', size: 'large', floor: 1, orderId: 'ORD-005', customerCount: 8, orderStartTime: '12:30', totalAmount: 125.75, orderItems: 12 },
-  { id: '14', number: 'A14', status: 'available', size: 'large', floor: 1 },
-  // 2nd Floor
-  { id: '15', number: 'B1', status: 'available', size: 'medium', floor: 2 },
-  { id: '16', number: 'B2', status: 'reserved', size: 'small', floor: 2, orderStartTime: '16:00', customerCount: 2 },
-  { id: '17', number: 'B3', status: 'available', size: 'large', floor: 2 },
-  { id: '18', number: 'B4', status: 'ordering', size: 'medium', floor: 2, orderId: 'ORD-006', customerCount: 4, orderStartTime: '15:30' },
-  // 3rd Floor
-  { id: '19', number: 'C1', status: 'available', size: 'medium', floor: 3 },
-  { id: '20', number: 'C2', status: 'needs-cleaning', size: 'small', floor: 3 },
-];
+import { useTableStore } from '~/store/tableState/table.state';
+import { TableStatus, type Table } from '~/store/tableState/table.types';
+import TableSVG from '~/modules/TableMangement/components/TableSVG';
+import { useQuery } from '@tanstack/react-query';
+import { GetTables } from '~/services/table.service';
 
 const TableMange = () => {
+  const { tables, selectedTable, setSelectedTable, setTables } = useTableStore();
   const [selectedFloor, setSelectedFloor] = useState(1);
-  const [selectedTable, setSelectedTable] = useState<string | null>(null);
+
+  const { isPending, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['tables'],
+    queryFn: GetTables,
+  });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setTables(data.data.tables);
+    }
+  }, [isSuccess]);
 
   // Filter tables by selected floor
-  const filteredTables = mockTables.filter(table => table.floor === selectedFloor);
+  const filteredTables = tables.filter((table) => table.floor === selectedFloor);
 
   // Handle table selection
-  const handleTableSelect = (tableId: string, status: TableStatus) => {
-    setSelectedTable(tableId);
+  const handleTableSelect = (table: Table) => {
+    setSelectedTable(table);
   };
-
-  // Get selected table data
-  const selectedTableData = selectedTable ? mockTables.find(t => t.id === selectedTable) : null;
 
   // Handle different POS actions
   const handleStartOrder = () => {
@@ -90,7 +57,7 @@ const TableMange = () => {
   };
 
   return (
-      <div className="p-6 min-h-screen">
+    <div className="p-6 min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Table Management</h1>
@@ -129,77 +96,100 @@ const TableMange = () => {
           {[1, 2, 3].map((floor) => (
             <Button
               key={floor}
-              variant={selectedFloor === floor ? "default" : "outline"}
+              variant={selectedFloor === floor ? 'default' : 'outline'}
               onClick={() => setSelectedFloor(floor)}
-              className="px-6"
+              className="px-6 capitalize cursor-pointer"
             >
-              {floor === 1 ? "1st Floor" : floor === 2 ? "2nd Floor" : "3rd Floor"}
+              {floor === 1 ? '1st Floor' : floor === 2 ? '2nd Floor' : '3rd Floor'}
             </Button>
           ))}
         </div>
       </div>
 
       {/* Tables Grid */}
-      <div className='flex gap-4'>
-        <Card className="p-8 max-h-[70vh] overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
-        <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
-          {filteredTables.map((table) => {
-            const isSelected = selectedTable === table.id;
+      <div className="flex gap-4">
+        <Card className="p-8  min-h-[70vh] max-h-[70vh] w-2/3 overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
+          {isPending && (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          )}
+          {isError && (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">Error: {error.message}</p>
+            </div>
+          )}
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
+            {filteredTables.length === 0 && (
+              <>
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-muted-foreground">No tables found</p>
+                </div>
+              </>
+            )}
+            {filteredTables.length > 0 &&
+              filteredTables.map((table) => {
+                const isSelected = selectedTable?.id === table.id;
+                return (
+                  <TableSVG
+                    key={table.id}
+                    tableNumber={table.number}
+                    status={table.status}
+                    time={table.orderStartTime}
+                    reservationId={table.orderId}
+                    isSelected={isSelected}
+                    onClick={() => handleTableSelect(table)}
+                  />
+                );
+              })}
+          </div>
+        </Card>
 
-            return (
-              <TableSVG
-                key={table.id}
-                tableNumber={table.number}
-                status={table.status}
-                time={table.orderStartTime}
-                reservationId={table.orderId}
-                isSelected={isSelected}
-                onClick={() => handleTableSelect(table.id, table.status)}
-              />
-            );
-          })}
-        </div>
-      </Card>
+        {/* Selected Table Management Panel */}
 
-      {/* Selected Table Management Panel */}
-     
         <Card className="p-6 min-w-[30rem] bg-card border-border">
           <div className="space-y-4">
             {/* Table Info Header */}
             <div className="flex items-center justify-between border-b border-border pb-4">
               <div>
                 <h3 className="text-xl font-semibold text-card-foreground">
-                  Table {selectedTableData?.number}
+                  Table {selectedTable?.number}
                 </h3>
                 <p className="text-muted-foreground mt-1 capitalize">
-                  Status: {selectedTableData?.status.replace('-', ' ')}
+                  Status: {selectedTable?.status.replace('-', ' ')}
                 </p>
               </div>
               <Button variant="outline" size="sm" onClick={() => setSelectedTable(null)}>
                 ✕ Close
               </Button>
             </div>
-
             {/* Order Details (if table has active order) */}
-            {(selectedTableData?.status === 'occupied' || selectedTableData?.status === 'ordering') && (
+            {(selectedTable?.status === TableStatus.OCCUPIED ||
+              selectedTable?.status === TableStatus.ORDERING) && (
               <div className="bg-muted/30 p-4 rounded-lg">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">Order ID:</span>
-                    <p className="font-medium text-card-foreground">{selectedTableData?.orderId}</p>
+                    <p className="font-medium text-card-foreground">{selectedTable?.orderId}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Customers:</span>
-                    <p className="font-medium text-card-foreground">{selectedTableData.customerCount}</p>
+                    <p className="font-medium text-card-foreground">
+                      {selectedTable?.customerCount}
+                    </p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Order Time:</span>
-                    <p className="font-medium text-card-foreground">{selectedTableData.orderStartTime}</p>
+                    <p className="font-medium text-card-foreground">
+                      {selectedTable?.orderStartTime}
+                    </p>
                   </div>
-                  {selectedTableData.totalAmount && (
+                  {selectedTable?.totalAmount && (
                     <div>
                       <span className="text-muted-foreground">Total:</span>
-                      <p className="font-medium text-card-foreground">${selectedTableData.totalAmount}</p>
+                      <p className="font-medium text-card-foreground">
+                        ${selectedTable?.totalAmount}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -208,7 +198,7 @@ const TableMange = () => {
 
             {/* Action Buttons based on table status */}
             <div className="flex flex-wrap gap-3">
-              {selectedTableData?.status === 'available' && (
+              {selectedTable?.status === TableStatus.AVAILABLE && (
                 <>
                   <Button onClick={handleStartOrder} className="bg-green-600 hover:bg-green-700">
                     Start New Order
@@ -216,7 +206,7 @@ const TableMange = () => {
                 </>
               )}
 
-              {selectedTableData?.status === 'ordering' && (
+              {selectedTable?.status === TableStatus.ORDERING && (
                 <>
                   <Button onClick={handleViewOrder} variant="outline">
                     Continue Order
@@ -227,7 +217,7 @@ const TableMange = () => {
                 </>
               )}
 
-              {selectedTableData?.status === 'occupied' && (
+              {selectedTable?.status === TableStatus.OCCUPIED && (
                 <>
                   <Button onClick={handleViewOrder} variant="outline">
                     View Order
@@ -241,13 +231,13 @@ const TableMange = () => {
                 </>
               )}
 
-              {selectedTableData?.status === 'needs-cleaning' && (
+              {selectedTable?.status === TableStatus.NEEDS_CLEANING && (
                 <Button onClick={handleMarkAvailable} className="bg-green-600 hover:bg-green-700">
                   Mark as Clean & Available
                 </Button>
               )}
 
-              {selectedTableData?.status === 'reserved' && (
+              {selectedTable?.status === TableStatus.RESERVED && (
                 <>
                   <Button onClick={handleStartOrder} className="bg-green-600 hover:bg-green-700">
                     Seat Customers
@@ -260,9 +250,7 @@ const TableMange = () => {
             </div>
           </div>
         </Card>
-  
       </div>
-
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import {
   Select,
@@ -7,11 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '~/components/ui/chart';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '~/components/ui/chart';
 import {
   TrendingUp,
   TrendingDown,
@@ -199,7 +194,9 @@ const MainDashboard = () => {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-card-foreground">Total Revenue</CardTitle>
+                  <CardTitle className="text-lg font-semibold text-card-foreground">
+                    Total Revenue
+                  </CardTitle>
                   <p className="text-2xl font-bold text-card-foreground mt-1">$184,839</p>
                 </div>
                 <Select defaultValue="8months">
@@ -270,7 +267,9 @@ const MainDashboard = () => {
           <Card className="bg-card shadow-sm py-4">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-card-foreground">Top Categories</CardTitle>
+                <CardTitle className="text-lg font-semibold text-card-foreground">
+                  Top Categories
+                </CardTitle>
                 <Select defaultValue="thismonth">
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -311,8 +310,12 @@ const MainDashboard = () => {
                 {topCategories.map((category, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${category.color === 'bg-orange-500' ? 'bg-primary' : category.color}`}></div>
-                      <span className="text-sm font-medium text-card-foreground">{category.name}</span>
+                      <div
+                        className={`w-3 h-3 rounded-full ${category.color === 'bg-orange-500' ? 'bg-primary' : category.color}`}
+                      ></div>
+                      <span className="text-sm font-medium text-card-foreground">
+                        {category.name}
+                      </span>
                       <span className="text-sm text-muted-foreground">{category.percentage}%</span>
                     </div>
                   </div>
@@ -327,7 +330,9 @@ const MainDashboard = () => {
           <Card className="bg-card shadow-sm py-4">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-card-foreground">Orders Overview</CardTitle>
+                <CardTitle className="text-lg font-semibold text-card-foreground">
+                  Orders Overview
+                </CardTitle>
                 <Select defaultValue="thisweek">
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -360,7 +365,9 @@ const MainDashboard = () => {
           <Card className="bg-card shadow-sm py-4">
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold text-card-foreground">Order Types</CardTitle>
+                <CardTitle className="text-lg font-semibold text-card-foreground">
+                  Order Types
+                </CardTitle>
                 <Select defaultValue="thismonth">
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -382,10 +389,14 @@ const MainDashboard = () => {
                         <div className="p-2 bg-primary/10 rounded">
                           <type.icon className="w-4 h-4 text-primary" />
                         </div>
-                        <span className="text-sm font-medium text-card-foreground">{type.name}</span>
+                        <span className="text-sm font-medium text-card-foreground">
+                          {type.name}
+                        </span>
                         <span className="text-sm text-muted-foreground">{type.percentage}%</span>
                       </div>
-                      <span className="text-lg font-semibold text-card-foreground">{type.count}</span>
+                      <span className="text-lg font-semibold text-card-foreground">
+                        {type.count}
+                      </span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
                       <div

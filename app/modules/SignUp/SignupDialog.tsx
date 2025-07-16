@@ -22,15 +22,13 @@ const SignupDialog = () => {
     setDisabled(true);
     setLoadingEmail(true);
     try {
-      const { data, error } = await signUp.email(
-        {
-          email, // user email address
-          password, // user password -> min 8 characters by default
-          name: name, // user display name
-          image: 'https://github.com/shadcn.png', // User image URL (optional)
-          callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
-        },
-      );
+      const { data, error } = await signUp.email({
+        email, // user email address
+        password, // user password -> min 8 characters by default
+        name: name, // user display name
+        image: 'https://github.com/shadcn.png', // User image URL (optional)
+        callbackURL: `${URL}/dashboard`, // A URL to redirect to after the user verifies their email (optional)
+      });
       if (data) {
         navigate('/dashboard');
       }
@@ -48,7 +46,7 @@ const SignupDialog = () => {
     setDisabled(true);
     setLoadingGoogle(true);
     try {
-      const { data, error } = await signIn.social({
+      const { error } = await signIn.social({
         provider: 'google',
         callbackURL: `${URL}/dashboard`,
       });
@@ -65,7 +63,7 @@ const SignupDialog = () => {
     setDisabled(true);
     setLoadingGithub(true);
     try {
-      const { data, error } = await signIn.social({
+      const { error } = await signIn.social({
         provider: 'github',
         callbackURL: `${URL}/dashboard`,
       });
