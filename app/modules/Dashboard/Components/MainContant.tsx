@@ -1,10 +1,10 @@
-import { Button } from "~/components/ui/button";
+import { Button } from '~/components/ui/button';
 
 const MainContant = () => {
   return (
     <>
-    {/* Main Content */}
-    <div className="flex-1 overflow-auto p-6">
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto p-6">
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4 text-foreground">Popular Menu Items</h2>
 
@@ -19,12 +19,16 @@ const MainContant = () => {
               <div className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-semibold text-card-foreground">Mango Coconut Smoothie Bowl</h3>
+                    <h3 className="text-lg font-semibold text-card-foreground">
+                      Mango Coconut Smoothie Bowl
+                    </h3>
                     <div className="flex gap-2 text-xs text-muted-foreground mt-1">
                       <span className="bg-primary/10 text-primary px-2 py-1 rounded">
                         Beverages
                       </span>
-                      <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-2 py-1 rounded">Dessert</span>
+                      <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-2 py-1 rounded">
+                        Dessert
+                      </span>
                     </div>
                   </div>
                   <span className="text-xl font-bold text-primary">$9.00</span>
@@ -66,9 +70,13 @@ const MainContant = () => {
               <div className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-semibold text-card-foreground">Nuts Berries Oatmeal</h3>
+                    <h3 className="text-lg font-semibold text-card-foreground">
+                      Nuts Berries Oatmeal
+                    </h3>
                     <div className="flex gap-2 text-xs text-muted-foreground mt-1">
-                      <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-2 py-1 rounded">Dessert</span>
+                      <span className="bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-2 py-1 rounded">
+                        Dessert
+                      </span>
                     </div>
                   </div>
                   <span className="text-xl font-bold text-primary">$10.00</span>
@@ -109,7 +117,9 @@ const MainContant = () => {
               <div className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-lg font-semibold text-card-foreground">Green Detox Juice</h3>
+                    <h3 className="text-lg font-semibold text-card-foreground">
+                      Green Detox Juice
+                    </h3>
                     <div className="flex gap-2 text-xs text-muted-foreground mt-1">
                       <span className="bg-primary/10 text-primary px-2 py-1 rounded">
                         Beverages
@@ -194,10 +204,7 @@ const MainContant = () => {
         <div className="bg-card p-6 rounded-lg shadow border border-border">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-card-foreground">Recent Orders</h2>
-            <Button
-              variant="outline"
-              className="text-primary border-primary hover:bg-primary/5"
-            >
+            <Button variant="outline" className="text-primary border-primary hover:bg-primary/5">
               View All
             </Button>
           </div>

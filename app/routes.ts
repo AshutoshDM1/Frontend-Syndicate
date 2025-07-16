@@ -7,7 +7,7 @@ export default [
     route('table-management', 'modules/TableMangement/TableMange.tsx'),
     route('menu-custom', 'modules/MenuCustom/MenuCustom.tsx'),
     route('quick-order', 'modules/QuickOrder/QuickOrder.tsx'),
-  ]), 
+  ]),
   route('/login', 'routes/signIn.tsx'),
   route('/signup', 'routes/signUp.tsx'),
 ] satisfies RouteConfig;

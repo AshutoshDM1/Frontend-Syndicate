@@ -1,9 +1,9 @@
-import { AppWindow, LayoutDashboard, ShoppingCart, TableIcon, UserIcon, Menu } from "lucide-react";
-import { useLocation } from "react-router";
-import { useState } from "react";
-import SidebarLink from "~/components/SidebarLink";
-import { Button } from "~/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { AppWindow, LayoutDashboard, ShoppingCart, TableIcon, UserIcon, Menu } from 'lucide-react';
+import { useLocation } from 'react-router';
+import { useState } from 'react';
+import SidebarLink from '~/components/SidebarLink';
+import { Button } from '~/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -12,28 +12,28 @@ const Sidebar = () => {
   const NavLink = {
     Dashboard: {
       icon: <LayoutDashboard size={20} />,
-      label: "Dashboard",
-      href: "/dashboard",
+      label: 'Dashboard',
+      href: '/dashboard',
     },
     ManageUser: {
       icon: <UserIcon size={20} />,
-      label: "Manage User",
-      href: "/dashboard/manage-user",
+      label: 'Manage User',
+      href: '/dashboard/manage-user',
     },
     TableManagement: {
       icon: <TableIcon size={20} />,
-      label: "Table Management",
-      href: "/dashboard/table-management",
+      label: 'Table Management',
+      href: '/dashboard/table-management',
     },
     MenuCustom: {
       icon: <AppWindow size={20} />,
-      label: "Menu Customization",
-      href: "/dashboard/menu-custom",
+      label: 'Menu Customization',
+      href: '/dashboard/menu-custom',
     },
     QuickOrder: {
       icon: <ShoppingCart size={20} />,
-      label: "Quick Order",
-      href: "/dashboard/quick-order",
+      label: 'Quick Order',
+      href: '/dashboard/quick-order',
     },
   };
 
@@ -51,11 +51,7 @@ const Sidebar = () => {
         </div>
         <nav className="space-y-3 flex flex-col gap-1 w-full">
           {Object.values(NavLink).map((link) => (
-            <SidebarLink 
-              key={link.label} 
-              {...link} 
-              isActive={location.pathname === link.href} 
-            />
+            <SidebarLink key={link.label} {...link} isActive={location.pathname === link.href} />
           ))}
         </nav>
       </div>
@@ -66,14 +62,16 @@ const Sidebar = () => {
         <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border shadow-lg z-50">
           <div className="safe-area-pb">
             <nav className="flex justify-around items-center px-2 py-1">
-              {Object.values(NavLink).slice(0, 3).map((link) => (
-                <SidebarLink 
-                  key={link.label} 
-                  {...link} 
-                  isActive={location.pathname === link.href}
-                  isMobile={true}
-                />
-              ))}
+              {Object.values(NavLink)
+                .slice(0, 3)
+                .map((link) => (
+                  <SidebarLink
+                    key={link.label}
+                    {...link}
+                    isActive={location.pathname === link.href}
+                    isMobile={true}
+                  />
+                ))}
               {/* More Menu for additional items */}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
@@ -89,15 +87,11 @@ const Sidebar = () => {
                 <SheetContent side="bottom" className="h-[400px] bg-card/95 backdrop-blur-sm">
                   <div className="flex justify-between items-center border-b border-border">
                     <h2 className="text-lg font-semibold text-foreground p-4 ">Navigation Menu</h2>
-
                   </div>
                   <nav className="space-y-3">
                     {Object.values(NavLink).map((link) => (
                       <div key={link.label} onClick={handleLinkClick}>
-                        <SidebarLink 
-                          {...link} 
-                          isActive={location.pathname === link.href} 
-                        />
+                        <SidebarLink {...link} isActive={location.pathname === link.href} />
                       </div>
                     ))}
                   </nav>

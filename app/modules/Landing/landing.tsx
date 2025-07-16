@@ -327,7 +327,7 @@ const Landing = () => {
       </section>
 
       {/* Testimonial Quote */}
-      <section className="py-16 bg-muted/30"> 
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl font-bold mb-8">
@@ -492,7 +492,7 @@ const Landing = () => {
               </ul>
             </div>
 
-            <div  >
+            <div>
               <h3 className="font-bold mb-4">Company</h3>
               <ul className="space-y-2">
                 <li>

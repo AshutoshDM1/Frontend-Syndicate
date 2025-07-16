@@ -1,15 +1,15 @@
-import { Moon, Sun, Monitor } from "lucide-react"
-import { Button } from "~/components/ui/button"
+import { Moon, Sun, Monitor } from 'lucide-react';
+import { Button } from '~/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu"
-import { useTheme } from "~/components/theme-provider"
+} from '~/components/ui/dropdown-menu';
+import { useTheme } from '~/components/theme-provider';
 
 export function ThemeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -21,19 +21,19 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("light")}>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme('light')}>
           <Sun className="dark:hover:text-primary  mr-2 h-4 w-4" />
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("dark")}>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme('dark')}>
           <Moon className="dark:hover:text-primary  mr-2 h-4 w-4" />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("system")}>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme('system')}>
           <Monitor className="dark:hover:text-primary  mr-2 h-4 w-4" />
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-} 
+  );
+}

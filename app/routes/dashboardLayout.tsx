@@ -23,8 +23,7 @@ const DashboardLayout = () => {
       });
     }
   };
-
-
+  console.log(handleSignOut);
   const navItems = [
     { name: 'Dashboard', url: '/dashboard/', icon: Home },
     { name: 'Users', url: '/dashboard/manage-user', icon: User },
@@ -39,7 +38,7 @@ const DashboardLayout = () => {
     <>
       <div className="flex flex-col h-screen bg-background">
         <div className="flex flex-1 overflow-hidden">
-        <TubelightNavbar items={navItems} />  
+          <TubelightNavbar items={navItems} />
           {/* Sidebar */}
           <Sidebar />
           <div className="flex-1 overflow-auto p-6 bg-muted/30 custom-scrollbar-main pb-2 pt-14">

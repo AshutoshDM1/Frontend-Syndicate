@@ -5,18 +5,7 @@ import { Input } from '~/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { Badge } from '~/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
-import {
-  Star,
-  ShoppingCart,
-  Plus,
-  Minus,
-  Search,
-  Clock,
-  X,
-  Edit,
-  Check,
-
-} from 'lucide-react';
+import { Star, ShoppingCart, Plus, Minus, Search, Clock, X, Edit, Check } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -216,7 +205,7 @@ const QuickOrder = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const [selectedCombo, setSelectedCombo] = useState<ComboMeal | null>(null);
+  // const [selectedCombo, setSelectedCombo] = useState<ComboMeal | null>(null);
   const [showItemDialog, setShowItemDialog] = useState(false);
   const [showComboDialog, setShowComboDialog] = useState(false);
   const [showOrderDialog, setShowOrderDialog] = useState(false);
@@ -401,13 +390,12 @@ const QuickOrder = () => {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 py-0 mb-5 ">
-          <TabsTrigger value="menu" className="text-lg py-2 cursor-pointer w-full">
-            Menu Items
-          </TabsTrigger>
-          <TabsTrigger value="combos" className="text-lg py-2 cursor-pointer w-full">
-            Combo Meals
-          </TabsTrigger>
-
+            <TabsTrigger value="menu" className="text-lg py-2 cursor-pointer w-full">
+              Menu Items
+            </TabsTrigger>
+            <TabsTrigger value="combos" className="text-lg py-2 cursor-pointer w-full">
+              Combo Meals
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="menu" className="space-y-6">
             {/* Category Filter */}
@@ -466,7 +454,9 @@ const QuickOrder = () => {
                       <h3 className="font-semibold text-base text-card-foreground line-clamp-1">
                         {item.name}
                       </h3>
-                      <p className="text-muted-foreground text-xs line-clamp-2">{item.description}</p>
+                      <p className="text-muted-foreground text-xs line-clamp-2">
+                        {item.description}
+                      </p>
                     </div>
 
                     <div className="flex items-center justify-between text-sm">
@@ -567,7 +557,9 @@ const QuickOrder = () => {
           <div className="text-center py-12">
             <ShoppingCart className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
             <p className="text-muted-foreground text-sm">No items added yet</p>
-            <p className="text-muted-foreground/70 text-xs mt-1">Start adding items to create an order</p>
+            <p className="text-muted-foreground/70 text-xs mt-1">
+              Start adding items to create an order
+            </p>
           </div>
         ) : (
           <>
@@ -619,7 +611,7 @@ const QuickOrder = () => {
             </div>
 
             <div className="border-t pt-4 space-y-4">
-                              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold text-card-foreground">Total:</span>
                 <span className="text-2xl font-bold text-primary">
                   ${getCartTotal().toFixed(2)}

@@ -1,24 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
-import { useTableStore } from '~/store/tableState/table.store';
-import type { Table } from '~/store/tableState/table.types';
-import TableSVG from '~/components/TableSVG';
-
+import { useTableStore } from '~/store/tableState/table.state';
+import { TableStatus, type Table } from '~/store/tableState/table.types';
+import TableSVG from '~/modules/TableMangement/components/TableSVG';
+import { useQuery } from '@tanstack/react-query';
+import { GetTables } from '~/services/table.service';
 
 const TableMange = () => {
-
-  const { tables, selectedTable, setSelectedTable } = useTableStore();
+  const { tables, selectedTable, setSelectedTable, setTables } = useTableStore();
   const [selectedFloor, setSelectedFloor] = useState(1);
 
+  const { isPending, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['tables'],
+    queryFn: GetTables,
+  });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setTables(data.data.tables);
+    }
+  }, [isSuccess]);
+
   // Filter tables by selected floor
-  const filteredTables = tables.filter(table => table.floor === selectedFloor);
+  const filteredTables = tables.filter((table) => table.floor === selectedFloor);
 
   // Handle table selection
   const handleTableSelect = (table: Table) => {
     setSelectedTable(table);
   };
-
 
   // Handle different POS actions
   const handleStartOrder = () => {
@@ -47,7 +57,7 @@ const TableMange = () => {
   };
 
   return (
-      <div className="p-6 min-h-screen">
+    <div className="p-6 min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Table Management</h1>
@@ -86,39 +96,57 @@ const TableMange = () => {
           {[1, 2, 3].map((floor) => (
             <Button
               key={floor}
-              variant={selectedFloor === floor ? "default" : "outline"}
+              variant={selectedFloor === floor ? 'default' : 'outline'}
               onClick={() => setSelectedFloor(floor)}
-              className="px-6"
+              className="px-6 capitalize cursor-pointer"
             >
-              {floor === 1 ? "1st Floor" : floor === 2 ? "2nd Floor" : "3rd Floor"}
+              {floor === 1 ? '1st Floor' : floor === 2 ? '2nd Floor' : '3rd Floor'}
             </Button>
           ))}
         </div>
       </div>
 
       {/* Tables Grid */}
-      <div className='flex gap-4'>
-        <Card className="p-8 max-h-[70vh] overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
-        <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
-          {filteredTables.map((table) => {
-            const isSelected = selectedTable?.id === table.id;
-            return (
-              <TableSVG
-                key={table.id}
-                tableNumber={table.number}
-                status={table.status}
-                time={table.orderStartTime}
-                reservationId={table.orderId}
-                isSelected={isSelected}
-                onClick={() => handleTableSelect(table)}
-              />
-            );
-          })}
-        </div>
-      </Card>
+      <div className="flex gap-4">
+        <Card className="p-8  min-h-[70vh] max-h-[70vh] w-2/3 overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
+          {isPending && (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          )}
+          {isError && (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-muted-foreground">Error: {error.message}</p>
+            </div>
+          )}
+          <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
+            {filteredTables.length === 0 && (
+              <>
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-muted-foreground">No tables found</p>
+                </div>
+              </>
+            )}
+            {filteredTables.length > 0 &&
+              filteredTables.map((table) => {
+                const isSelected = selectedTable?.id === table.id;
+                return (
+                  <TableSVG
+                    key={table.id}
+                    tableNumber={table.number}
+                    status={table.status}
+                    time={table.orderStartTime}
+                    reservationId={table.orderId}
+                    isSelected={isSelected}
+                    onClick={() => handleTableSelect(table)}
+                  />
+                );
+              })}
+          </div>
+        </Card>
 
-      {/* Selected Table Management Panel */}
-     
+        {/* Selected Table Management Panel */}
+
         <Card className="p-6 min-w-[30rem] bg-card border-border">
           <div className="space-y-4">
             {/* Table Info Header */}
@@ -135,9 +163,9 @@ const TableMange = () => {
                 ✕ Close
               </Button>
             </div>
-
             {/* Order Details (if table has active order) */}
-            {(selectedTable?.status === 'occupied' || selectedTable?.status === 'ordering') && (
+            {(selectedTable?.status === TableStatus.OCCUPIED ||
+              selectedTable?.status === TableStatus.ORDERING) && (
               <div className="bg-muted/30 p-4 rounded-lg">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
@@ -146,16 +174,22 @@ const TableMange = () => {
                   </div>
                   <div>
                     <span className="text-muted-foreground">Customers:</span>
-                    <p className="font-medium text-card-foreground">{selectedTable?.customerCount}</p>
+                    <p className="font-medium text-card-foreground">
+                      {selectedTable?.customerCount}
+                    </p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Order Time:</span>
-                    <p className="font-medium text-card-foreground">{selectedTable?.orderStartTime}</p>
+                    <p className="font-medium text-card-foreground">
+                      {selectedTable?.orderStartTime}
+                    </p>
                   </div>
                   {selectedTable?.totalAmount && (
                     <div>
                       <span className="text-muted-foreground">Total:</span>
-                      <p className="font-medium text-card-foreground">${selectedTable?.totalAmount}</p>
+                      <p className="font-medium text-card-foreground">
+                        ${selectedTable?.totalAmount}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -164,7 +198,7 @@ const TableMange = () => {
 
             {/* Action Buttons based on table status */}
             <div className="flex flex-wrap gap-3">
-              {selectedTable?.status === 'available' && (
+              {selectedTable?.status === TableStatus.AVAILABLE && (
                 <>
                   <Button onClick={handleStartOrder} className="bg-green-600 hover:bg-green-700">
                     Start New Order
@@ -172,7 +206,7 @@ const TableMange = () => {
                 </>
               )}
 
-              {selectedTable?.status === 'ordering' && (
+              {selectedTable?.status === TableStatus.ORDERING && (
                 <>
                   <Button onClick={handleViewOrder} variant="outline">
                     Continue Order
@@ -183,7 +217,7 @@ const TableMange = () => {
                 </>
               )}
 
-              {selectedTable?.status === 'occupied' && (
+              {selectedTable?.status === TableStatus.OCCUPIED && (
                 <>
                   <Button onClick={handleViewOrder} variant="outline">
                     View Order
@@ -197,13 +231,13 @@ const TableMange = () => {
                 </>
               )}
 
-              {selectedTable?.status === 'needs-cleaning' && (
+              {selectedTable?.status === TableStatus.NEEDS_CLEANING && (
                 <Button onClick={handleMarkAvailable} className="bg-green-600 hover:bg-green-700">
                   Mark as Clean & Available
                 </Button>
               )}
 
-              {selectedTable?.status === 'reserved' && (
+              {selectedTable?.status === TableStatus.RESERVED && (
                 <>
                   <Button onClick={handleStartOrder} className="bg-green-600 hover:bg-green-700">
                     Seat Customers
@@ -216,9 +250,7 @@ const TableMange = () => {
             </div>
           </div>
         </Card>
-  
       </div>
-
     </div>
   );
 };
