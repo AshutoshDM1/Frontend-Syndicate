@@ -1,4 +1,4 @@
-import SignupDialog from '~/modules/SignUp/SignupDialog';
+import SignupDialog from '~/pages/SignUp/SignupDialog';
 
 const Signup = () => {
   return (

@@ -1,8 +1,8 @@
 import { Home, Settings, ShoppingCart, User } from 'lucide-react';
 import { authClient, useSession } from '~/lib/auth-client';
 import { Outlet, useLocation, useNavigate } from 'react-router';
-import Sidebar from '~/modules/Dashboard/Sidebar';
-import Dashboard from '~/modules/Dashboard/Dashboard';
+import Sidebar from '~/pages/Dashboard/Sidebar';
+import Dashboard from '~/pages/Dashboard/Dashboard';
 import { TubelightNavbar } from '~/components/ui/tubelight-navbar';
 
 const DashboardLayout = () => {
@@ -23,7 +23,7 @@ const DashboardLayout = () => {
       });
     }
   };
-  console.log(handleSignOut);
+  
   const navItems = [
     { name: 'Dashboard', url: '/dashboard/', icon: Home },
     { name: 'Users', url: '/dashboard/manage-user', icon: User },
