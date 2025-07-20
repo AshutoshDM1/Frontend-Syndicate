@@ -1,4 +1,4 @@
-import SignInDialog from '~/modules/SignIn/SignInDialog';
+import SignInDialog from '~/pages/SignIn/SignInDialog';
 
 const SignIn = () => {
   return (

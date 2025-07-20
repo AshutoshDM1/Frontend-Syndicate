@@ -3,7 +3,7 @@ import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { useTableStore } from '~/store/tableState/table.state';
 import { TableStatus, type Table } from '~/store/tableState/table.types';
-import TableSVG from '~/modules/TableMangement/components/TableSVG';
+import TableSVG from '~/modules/TableManagement/components/TableSVG';
 import { useQuery } from '@tanstack/react-query';
 import { GetTables } from '~/services/table.service';
 

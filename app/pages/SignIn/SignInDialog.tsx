@@ -82,7 +82,7 @@ const SignInDialog = () => {
         <div className="hidden w-1/2 bg-gray-100 lg:flex items-center justify-center p-0 h-screen">
           <div className="w-full h-full flex items-center justify-center">
             <img
-              src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fFJlc3RhdXJhbnR8ZW58MHx8MHx8fDA%3D"
+              src="https://images.pexels.com/photos/2290753/pexels-photo-2290753.jpeg?cs=tinysrgb&w=1660&h=1050&dpr=1"
               alt="Login illustration"
               className="object-cover object-center h-full w-full"
             />

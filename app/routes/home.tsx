@@ -1,4 +1,4 @@
-import Landing from '~/modules/Landing/landing';
+import Landing from '~/pages/Landing/landing';
 export function meta() {
   return [
     { title: 'Restzo' },

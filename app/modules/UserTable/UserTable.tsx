@@ -42,7 +42,7 @@ const ManageUser = () => {
   const handleRoleChange = async (id: string, role: UserRole) => {
     try {
       const response = await UpdateUser({ id, role });
-      toast.success(response.message);
+      toast.success(response?.message);
       refetch();
     } catch (error) {
       console.log(error);
