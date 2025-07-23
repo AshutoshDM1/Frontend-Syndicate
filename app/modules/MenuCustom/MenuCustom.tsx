@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -19,19 +19,12 @@ import {
   SelectValue,
 } from '~/components/ui/select';
 import { Checkbox } from '~/components/ui/checkbox';
+import { useQuery } from '@tanstack/react-query';
+import { GetMenuItems } from '~/services/MenuItem.service';
+import type { MenuItem } from '~/store/menuItemState/menuItem.types';
+import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 
 // Types
-interface MenuItem {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-  category: string;
-  rating: number;
-  available: boolean;
-  modifiers: Modifier[];
-}
 
 interface Modifier {
   id: string;
@@ -64,151 +57,21 @@ const MenuCustom = () => {
     { id: '4', name: 'Desserts', description: 'Sweet treats and desserts' },
     { id: '5', name: 'Beverages', description: 'Refreshing drinks' },
   ]);
+  const { menuItems, setMenuItems } = useMenuItemStore();
 
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([
-    {
-      id: '1',
-      name: 'Smokey Supreme Pizza',
-      price: 12.0,
-      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop',
-      description: 'Delicious pizza with smoked sausage, pepperoni, and cheese',
-      category: '1',
-      rating: 4.5,
-      available: true,
-      modifiers: [
-        { id: '1', name: 'Extra Cheese', price: 2.5, type: 'extra' },
-        { id: '2', name: 'Spicy', price: 0, type: 'option' },
-      ],
-    },
-    {
-      id: '2',
-      name: 'Grilled Salmon',
-      price: 22.0,
-      image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop',
-      description: 'Fresh grilled salmon with lemon and herbs',
-      category: '1',
-      rating: 4.7,
-      available: true,
-      modifiers: [
-        { id: '3', name: 'Extra Lemon', price: 0.5, type: 'extra' },
-        { id: '4', name: 'Medium Rare', price: 0, type: 'option' },
-      ],
-    },
-    {
-      id: '3',
-      name: 'Grilled Chicken Delight',
-      price: 18.0,
-      image: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=300&fit=crop',
-      description: 'Tender grilled chicken with herbs and spices',
-      category: '2',
-      rating: 4.8,
-      available: true,
-      modifiers: [
-        { id: '5', name: 'Extra Spicy', price: 0, type: 'option' },
-        { id: '6', name: 'BBQ Sauce', price: 1.0, type: 'extra' },
-      ],
-    },
-    {
-      id: '4',
-      name: 'Fiery Shrimp Salad',
-      price: 8.0,
-      image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop',
-      description: 'Fresh shrimp salad with mixed greens',
-      category: '3',
-      rating: 4.4,
-      available: true,
-      modifiers: [
-        { id: '7', name: 'Extra Shrimp', price: 3.0, type: 'extra' },
-        { id: '8', name: 'Dressing on Side', price: 0, type: 'option' },
-      ],
-    },
-    {
-      id: '5',
-      name: 'Chocolate Lava Cake',
-      price: 10.0,
-      image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop',
-      description: 'Rich chocolate cake with molten center',
-      category: '4',
-      rating: 4.9,
-      available: true,
-      modifiers: [
-        { id: '9', name: 'Vanilla Ice Cream', price: 2.0, type: 'extra' },
-        { id: '10', name: 'Extra Hot', price: 0, type: 'option' },
-      ],
-    },
-    {
-      id: '6',
-      name: 'Classic Cheeseburger',
-      price: 10.0,
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop',
-      description: 'Juicy beef patty with cheese, lettuce, and tomato',
-      category: '2',
-      rating: 4.6,
-      available: true,
-      modifiers: [
-        { id: '11', name: 'Extra Patty', price: 4.0, type: 'extra' },
-        { id: '12', name: 'No Onions', price: 0, type: 'option' },
-      ],
-    },
-    {
-      id: '7',
-      name: 'Sunny Citrus Cake',
-      price: 8.5,
-      image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400&h=300&fit=crop',
-      description: 'Light and zesty citrus cake',
-      category: '4',
-      rating: 4.8,
-      available: true,
-      modifiers: [
-        { id: '13', name: 'Extra Glaze', price: 1.0, type: 'extra' },
-        { id: '14', name: 'Whipped Cream', price: 1.5, type: 'extra' },
-      ],
-    },
-    {
-      id: '8',
-      name: 'Spaghetti Carbonara',
-      price: 15.0,
-      image:
-        'https://plus.unsplash.com/premium_photo-1674511582428-58ce834ce172?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8U3BhZ2hldHRpJTIwQ2FyYm9uYXJhfGVufDB8fDB8fHww',
-      description: 'Classic Italian pasta with eggs, cheese, and bacon',
-      category: '1',
-      rating: 4.7,
-      available: true,
-      modifiers: [
-        { id: '15', name: 'Extra Bacon', price: 2.5, type: 'extra' },
-        { id: '16', name: 'Gluten Free', price: 1.0, type: 'option' },
-      ],
-    },
-    {
-      id: '9',
-      name: 'Roasted Turkey Legs',
-      price: 8.0,
-      image:
-        'https://plus.unsplash.com/premium_photo-1664392048940-3e08720a4207?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Um9hc3RlZCUyMFR1cmtleSUyMExlZ3N8ZW58MHx8MHx8fDA%3D',
-      description: 'Slow-roasted turkey legs with herbs',
-      category: '1',
-      rating: 4.5,
-      available: true,
-      modifiers: [
-        { id: '17', name: 'Extra Gravy', price: 1.5, type: 'extra' },
-        { id: '18', name: 'Spicy Rub', price: 0, type: 'option' },
-      ],
-    },
-    {
-      id: '10',
-      name: 'Fresh Fruit Smoothie',
-      price: 6.5,
-      image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop',
-      description: 'Refreshing blend of seasonal fruits',
-      category: '5',
-      rating: 4.3,
-      available: true,
-      modifiers: [
-        { id: '19', name: 'Protein Powder', price: 2.0, type: 'extra' },
-        { id: '20', name: 'Extra Large', price: 2.0, type: 'option' },
-      ],
-    },
-  ]);
+  const { isPending, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['menuItems'],
+    queryFn: GetMenuItems,
+  });
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      setMenuItems(data.data.menuItems);
+    }
+  }, [isSuccess]);
+
+  console.log(data);
+
 
   const [comboMeals, setComboMeals] = useState<ComboMeal[]>([
     {
@@ -243,7 +106,7 @@ const MenuCustom = () => {
   const filteredItems =
     activeCategory === 'all'
       ? menuItems
-      : menuItems.filter((item) => item.category === activeCategory);
+      : menuItems.filter((item) => item.category.id === activeCategory);
 
   // Handle item selection and show customization dialog
   const handleItemClick = (item: MenuItem) => {
@@ -296,12 +159,22 @@ const MenuCustom = () => {
     const newItem: MenuItem = {
       id: Date.now().toString(),
       name: 'New Item',
-      price: 10.0,
+      price: '10.0',
       image: 'https://images.unsplash.com/photo-1546069900247-0877df9cc83c?w=400&h=300&fit=crop',
       description: 'New menu item description',
-      category: categories[0]?.id || '1',
-      rating: 4.0,
-      available: true,
+      category: categories[0] || { id: '1', name: 'Pizza' },
+      rating: '4.0',
+      isAvailable: true,
+      categoryId: '1',
+      prepTime: 10,
+      calories: 100,
+      isVegetarian: false,
+      isVegan: false,
+      isGlutenFree: false,
+      isSpicy: false,
+      sortOrder: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       modifiers: [],
     };
     setMenuItems([...menuItems, newItem]);
@@ -331,7 +204,7 @@ const MenuCustom = () => {
         price:
           newCombo.selectedItems.reduce((total, itemId) => {
             const item = menuItems.find((i) => i.id === itemId);
-            return total + (item?.price || 0);
+            return total + (parseFloat(item?.price || '0') || 0);
           }, 0) * 0.85, // 15% discount for combo
         image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop',
         description: newCombo.description,
@@ -358,7 +231,7 @@ const MenuCustom = () => {
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                 <span className="text-sm font-medium text-green-700">
-                  {menuItems.filter((item) => item.available).length} items available
+                  {menuItems.filter((item) => item.isAvailable).length} items available
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -418,7 +291,7 @@ const MenuCustom = () => {
                 onClick={() => setActiveCategory(category.id)}
                 className="whitespace-nowrap"
               >
-                {category.name} ({menuItems.filter((item) => item.category === category.id).length})
+                {category.name} ({menuItems.filter((item) => item.category.id === category.id).length})
               </Button>
               <Button
                 size="icon"
@@ -592,7 +465,7 @@ const MenuCustom = () => {
                 </div>
 
                 {/* Availability Overlay */}
-                {!item.available && (
+                    {!item.isAvailable && (
                   <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
                     <div className="bg-white/95 dark:bg-gray-800/95 px-4 py-2 rounded-full">
                       <span className="text-gray-800 dark:text-gray-200 font-semibold text-sm">
@@ -625,7 +498,7 @@ const MenuCustom = () => {
                         key={modifier.id}
                         className="inline-flex items-center px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full"
                       >
-                        {modifier.name}
+                        {modifier.modifier.name}
                         {modifier.price > 0 && <span className="ml-1">+${modifier.price}</span>}
                       </span>
                     ))}
@@ -641,14 +514,14 @@ const MenuCustom = () => {
                 <div className="flex flex-col items-start justify-center gap-2 pt-2">
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-primary">
-                      ${item.price.toFixed(2)}
+                      ${parseFloat(item.price.toString()).toFixed(2)}
                     </span>
                     <span className="text-sm text-muted-foreground font-medium">USD</span>
                   </div>
                   <Button
                     size="sm"
                     onClick={() => handleItemClick(item)}
-                    disabled={!item.available}
+                    disabled={!item.isAvailable}
                     className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
                   >
                     <ShoppingCart className="w-4 h-4 mr-1" />
@@ -660,12 +533,12 @@ const MenuCustom = () => {
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-2">
                     <div
-                      className={`w-2 h-2 rounded-full ${item.available ? 'bg-green-500' : 'bg-red-500'}`}
+                      className={`w-2 h-2 rounded-full ${item.isAvailable ? 'bg-green-500' : 'bg-red-500'}`}
                     />
                     <span
-                      className={`text-xs font-medium ${item.available ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}
+                      className={`text-xs font-medium ${item.isAvailable ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}
                     >
-                      {item.available ? 'Available' : 'Out of Stock'}
+                      {item.isAvailable ? 'Available' : 'Out of Stock'}
                     </span>
                   </div>
                 </div>
@@ -706,11 +579,11 @@ const MenuCustom = () => {
                               onChange={() => toggleModifier(modifier.id)}
                               className="mr-3 text-primary"
                             />
-                            <span>{modifier.name}</span>
+                            <span>{modifier.modifier.name}</span>
                           </div>
                           {modifier.price > 0 && (
                             <span className="text-primary font-medium">
-                              +${modifier.price.toFixed(2)}
+                              +${parseFloat(modifier.price.toString()).toFixed(2)}
                             </span>
                           )}
                         </label>
@@ -723,7 +596,7 @@ const MenuCustom = () => {
                   <div className="flex justify-between items-center mb-4">
                     <span className="text-lg font-semibold">Total:</span>
                     <span className="text-2xl font-bold text-primary">
-                      ${calculateTotalPrice().toFixed(2)}
+                      ${parseFloat(calculateTotalPrice().toString()).toFixed(2)}  
                     </span>
                   </div>
                   <Button className="w-full" onClick={() => setShowItemDialog(false)}>
@@ -821,7 +694,7 @@ const MenuCustom = () => {
                       <div className="flex-1">
                         <div className="font-medium text-sm">{item.name}</div>
                         <div className="text-xs text-muted-foreground">
-                          ${item.price.toFixed(2)}
+                          ${parseFloat(item.price.toString()).toFixed(2)}
                         </div>
                       </div>
                     </label>
@@ -835,7 +708,7 @@ const MenuCustom = () => {
                     {newCombo.selectedItems
                       .reduce((total, itemId) => {
                         const item = menuItems.find((i) => i.id === itemId);
-                        return total + (item?.price || 0);
+                        return total + (parseFloat(item?.price || '0') || 0);
                       }, 0)
                       .toFixed(2)}
                   </div>
@@ -844,7 +717,7 @@ const MenuCustom = () => {
                     {(
                       newCombo.selectedItems.reduce((total, itemId) => {
                         const item = menuItems.find((i) => i.id === itemId);
-                        return total + (item?.price || 0);
+                        return total + (parseFloat(item?.price || '0') || 0);
                       }, 0) * 0.85
                     ).toFixed(2)}
                   </div>
@@ -888,7 +761,7 @@ const MenuCustom = () => {
                     step="0.01"
                     value={editingItem.price}
                     onChange={(e) =>
-                      setEditingItem({ ...editingItem, price: parseFloat(e.target.value) || 0 })
+                        setEditingItem({ ...editingItem, price: e.target.value })
                     }
                   />
                 </div>
@@ -904,8 +777,8 @@ const MenuCustom = () => {
                 <div>
                   <label className="block text-sm font-medium mb-2">Category</label>
                   <Select
-                    value={editingItem.category}
-                    onValueChange={(value) => setEditingItem({ ...editingItem, category: value })}
+                    value={editingItem.category.id}
+                    onValueChange={(value) => setEditingItem({ ...editingItem, category: { id: value, name: 'Pizza' } })}
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Category" />
@@ -922,9 +795,9 @@ const MenuCustom = () => {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    checked={editingItem.available}
+                    checked={editingItem.isAvailable}
                     onChange={(e) =>
-                      setEditingItem({ ...editingItem, available: e.target.checked })
+                      setEditingItem({ ...editingItem, isAvailable: e.target.checked })
                     }
                     className="mr-2"
                   />
