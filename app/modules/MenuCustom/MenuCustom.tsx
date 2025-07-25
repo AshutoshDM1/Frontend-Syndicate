@@ -70,9 +70,6 @@ const MenuCustom = () => {
     }
   }, [isSuccess]);
 
-  console.log(data);
-
-
   const [comboMeals, setComboMeals] = useState<ComboMeal[]>([
     {
       id: '1',
