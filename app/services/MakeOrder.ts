@@ -1,7 +1,7 @@
 import type { APIResponse } from "~/types/api.types";
 import api, { handleError } from "./api";
 
-interface SendMenuItemProps {
+interface MakeOrderProps {
     tableId: string;
     customerName: string;
     customerPhone: string;
@@ -11,9 +11,9 @@ interface SendMenuItemProps {
     orderItems: any[];
 }
 
-export const SendMenuItem = async (SendData : SendMenuItemProps) => {
+export const MakeOrder = async (MakeOrderData : MakeOrderProps) => {
   try {
-    const response = await api.post(`/orders`, SendData);
+    const response = await api.post(`/orders`, MakeOrderData);
     const data = response.data as APIResponse<any>;
     return data;
   } catch (error) {
