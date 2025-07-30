@@ -22,7 +22,7 @@ const Sidebar = () => {
     },
     TableManagement: {
       icon: <TableIcon size={20} />,
-      label: 'Make Order',
+      label: 'Tables',
       href: '/dashboard/table-management',
     },
     MenuCustom: {

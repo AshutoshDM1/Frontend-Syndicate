@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { useTableStore } from '~/store/tableState/table.state';
-import { type Table } from '~/store/tableState/table.types';
+import { TableStatus, type Table } from '~/store/tableState/table.types';
 import TableSVG from '~/modules/TableManagement/components/TableSVG';
 import { useQuery } from '@tanstack/react-query';
 import { GetTables } from '~/services/table.service';
-import TableManagePannel from './components/TableManagePannel';
-import HeadingTable from './components/HeadingTable';
 
-const TableMange = () => {
+const SelectTable = ({ setShowTable }: { setShowTable: (show: boolean) => void }) => {
   const { tables, selectedTable, setSelectedTable, setTables } = useTableStore();
   const [selectedFloor, setSelectedFloor] = useState(1);
+  const [open, setOpen] = useState(false);
   const { isPending, isError, isSuccess, data, error } = useQuery({
     queryKey: ['tables'],
     queryFn: GetTables,
@@ -29,16 +28,70 @@ const TableMange = () => {
   // Handle table selection
   const handleTableSelect = (table: Table) => {
     setSelectedTable(table);
+    setShowTable(false);
+  };
+
+  // Handle different POS actions
+  const handleStartOrder = () => {
+    setOpen(true);
+    console.log('Starting new order for table:', selectedTable);
+    // Navigate to order taking screen or open order modal
+  };
+
+  const handleViewOrder = () => {
+    console.log('Viewing order for table:', selectedTable);
+    // Navigate to order details or open order management modal
+  };
+
+  const handleProcessPayment = () => {
+    console.log('Processing payment for table:', selectedTable);
+    // Navigate to payment processing
+  };
+
+  const handleMarkCleaning = () => {
+    console.log('Marking table for cleaning:', selectedTable);
+    // Update table status to needs-cleaning
+  };
+
+  const handleMarkAvailable = () => {
+    console.log('Marking table as available:', selectedTable);
+    // Update table status to available
   };
 
   return (
     <>
-      <div className="p-6 min-h-screen">
+      <div className="p-6 min-h-screen w-full">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Table Management</h1>
-          <p className="text-muted-foreground">Monitor table status and manage customer orders</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Select Table</h1>
+          <p className="text-muted-foreground">Select a table to start a new order</p>
         </div>
+
+        {/* Status Legend */}
+        <Card className="mb-6 p-4 bg-card border-border">
+          <div className="flex flex-wrap items-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-green-500 rounded-sm shadow-sm"></div>
+              <span className="text-sm font-medium text-card-foreground">Available</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-red-500 rounded-sm shadow-sm"></div>
+              <span className="text-sm font-medium text-card-foreground">Occupied</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-blue-500 rounded-sm shadow-sm"></div>
+              <span className="text-sm font-medium text-card-foreground">Reserved</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-primary rounded-sm shadow-sm"></div>
+              <span className="text-sm font-medium text-card-foreground">Taking Order</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-muted-foreground rounded-sm shadow-sm"></div>
+              <span className="text-sm font-medium text-card-foreground">Needs Cleaning</span>
+            </div>
+          </div>
+        </Card>
 
         {/* Floor Selection */}
         <div className="mb-6">
@@ -55,11 +108,10 @@ const TableMange = () => {
             ))}
           </div>
         </div>
-        <HeadingTable />
 
         {/* Tables Grid */}
         <div className="flex gap-4">
-          <Card className="p-8  min-h-[70vh] max-h-[70vh] w-2/3 overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
+          <Card className="p-8  min-h-[70vh] max-h-[70vh] w-full overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
             {isPending && (
               <div className="flex items-center justify-center h-full">
                 <p className="text-muted-foreground">Loading...</p>
@@ -95,13 +147,10 @@ const TableMange = () => {
                 })}
             </div>
           </Card>
-
-          {/* Selected Table Management Panel */}
-          <TableManagePannel selectedTable={selectedTable} setSelectedTable={setSelectedTable} />
         </div>
       </div>
     </>
   );
 };
 
-export default TableMange;
+export default SelectTable;
