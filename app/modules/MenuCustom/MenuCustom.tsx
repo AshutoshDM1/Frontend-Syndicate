@@ -2,14 +2,6 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from '~/components/ui/dialog';
 import { Plus, Edit, Trash2, Star, ShoppingCart } from 'lucide-react';
 import {
   Select,
