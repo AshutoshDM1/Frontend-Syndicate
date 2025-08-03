@@ -12,12 +12,12 @@ import {
 } from '~/components/ui/select';
 import { Checkbox } from '~/components/ui/checkbox';
 import { useQuery } from '@tanstack/react-query';
-import { GetMenuItems, type MenuItemApiResponse } from '~/services/MenuItem.service';
+import { CreateMenuItem, DeleteMenuItem, GetMenuItems, type CreateMenuItemInput, type MenuItemApiResponse } from '~/services/MenuItem.service';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 import { useComboMealStore } from '~/store/menuItemState/comboMeal.state';
 import { useCategoryStore } from '~/store/menuItemState/category.state';
-import { GetCategories } from '~/services/category.service';
+import { DeleteCategory, GetCategories } from '~/services/category.service';
 import { GetComboMeals } from '~/services/comboMeal.service';
 import type { Category } from '~/store/menuItemState/category.types';
 import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
@@ -27,6 +27,7 @@ import CreateComboDialog from './components/CreateComboDialog';
 import EditItemDialog from './components/EditItemDialog';
 import MenuCard from './components/MenuCard';
 import ComboMealCard from './components/ComboMealCard';
+import { toast } from 'sonner';
 
 const MenuCustom = () => {
   // Sample data
@@ -34,7 +35,7 @@ const MenuCustom = () => {
   const { menuItems, setMenuItems } = useMenuItemStore();
   const { comboMeals, setComboMeals } = useComboMealStore();
 
-  const { isPending, isError, isSuccess, data, error } = useQuery({
+  const { isPending, isError, isSuccess, data, error , refetch} = useQuery({
     queryKey: ['menuItems', 'categories', 'comboMeals'],
     queryFn: async () => {
       const [menuItems, categories, comboMeals] = await Promise.all([
@@ -53,7 +54,7 @@ const MenuCustom = () => {
       setCategories(data.categories.data.categories as Category[]);
       setComboMeals(data.comboMeals.data.comboMeals as ComboMeal[]);
     }
-  }, [isSuccess]);
+  }, [isSuccess, data]);
 
   // State for dialogs and forms
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -65,9 +66,8 @@ const MenuCustom = () => {
   const [selectedModifiers, setSelectedModifiers] = useState<string[]>([]);
 
   // Form states
-  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
-  
+
   // Filter items by category
   const filteredItems =
     activeCategory === 'all'
@@ -81,62 +81,39 @@ const MenuCustom = () => {
     setShowItemDialog(true);
   };
 
-  // Add new category
-  const handleAddCategory = () => {
-    if (newCategory.name.trim()) {
-      const category: Category = {
-        id: Date.now().toString(),
-        name: newCategory.name,
-        description: newCategory.description,
-        isActive: true,
-      };
-      setCategories([...categories, category]);
-      setNewCategory({ name: '', description: '' });
-      setShowCategoryDialog(false);
-    }
-  };
-
   // Delete category
-  const handleDeleteCategory = (categoryId: string) => {
-    setCategories(categories.filter((cat) => cat.id !== categoryId));
-    if (activeCategory === categoryId) {
-      setActiveCategory('all');
+  const handleDeleteCategory = async (categoryId: string) => {
+    try {
+      toast.loading('Deleting category...');
+      await DeleteCategory(categoryId);
+      toast.dismiss();
+      toast.success('Category deleted successfully');
+      refetch();
+    } catch (error) {
+      toast.dismiss();
+      toast.error('Failed to delete category');
     }
   };
 
   // Add new menu item
   const handleAddMenuItem = () => {
-    const newItem: MenuItem = {
-      id: Date.now().toString(),
-      name: 'New Item',
-      price: '10.0',
-      image: 'https://images.unsplash.com/photo-1546069900247-0877df9cc83c?w=400&h=300&fit=crop',
-      description: 'New menu item description',
-      category: categories[0] || { id: '1', name: 'Pizza' },
-      rating: '4.0',
-      isAvailable: true,
-      categoryId: '1',
-      prepTime: 10,
-      calories: 100,
-      isVegetarian: false,
-      isVegan: false,
-      isGlutenFree: false,
-      isSpicy: false,
-      sortOrder: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      modifiers: [],
-    };
-    setMenuItems([...menuItems, newItem]);
-    setEditingItem(newItem);
+    setEditingItem(null);
     setShowEditItemDialog(true);
   };
 
   // Delete menu item
-  const handleDeleteMenuItem = (itemId: string) => {
-    setMenuItems(menuItems.filter((item) => item.id !== itemId));
+  const handleDeleteMenuItem = async (itemId: string) => {
+    try {
+      toast.loading('Deleting item...');
+      await DeleteMenuItem(itemId);
+      toast.dismiss();
+      toast.success('Item deleted successfully');
+      refetch();
+    } catch (error) {
+      toast.dismiss();
+      toast.error('Failed to delete item');
+    }
   };
-
 
   return (
     <div className="min-h-screen p-6">
@@ -174,23 +151,21 @@ const MenuCustom = () => {
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={() => setShowCategoryDialog(true)}
-              variant="outline"
-              className="border-primary/20 hover:border-primary/30 hover:bg-primary/5 text-primary font-medium cursor-pointer"
+                className="bg-emerald-500 hover:bg-emerald-600 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Category
             </Button>
             <Button
               onClick={handleAddMenuItem}
-              variant="outline"
-              className="border-primary/20 hover:border-primary/30 hover:bg-primary/5 text-primary font-medium cursor-pointer"
+              className="bg-blue-500 hover:bg-blue-600 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Item
             </Button>
             <Button
               onClick={() => setShowComboDialog(true)}
-              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+              className="bg-primary hover:bg-primary/80 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create Combo
@@ -199,14 +174,24 @@ const MenuCustom = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
-          <Button
-            variant={activeCategory === 'all' ? 'default' : 'outline'}
-            onClick={() => setActiveCategory('all')}
-            className="whitespace-nowrap"
-          >
-            All Items ({menuItems.length})
-          </Button>
+        <div className="flex gap-4 mb-8 flex-wrap pb-2">
+          <div className="flex gap-4">
+            <Button
+              variant={activeCategory === 'all' ? 'default' : 'outline'}
+              onClick={() => setActiveCategory('all')}
+              className="whitespace-nowrap"
+            >
+              All Items ({menuItems.length})
+            </Button> 
+            <Button
+              variant={activeCategory === 'comboMeals' ? 'default' : 'outline'}
+              onClick={() => setActiveCategory('comboMeals')}
+              className="whitespace-nowrap"
+            >
+              Combo Meals ({comboMeals.length})
+            </Button>{' '}
+          </div>
+          <div className="flex flex-wrap gap-4">
           {categories.map((category) => (
             <div key={category.id} className="flex items-center gap-2">
               <Button
@@ -226,11 +211,11 @@ const MenuCustom = () => {
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>
-          ))}
+          ))}</div>
         </div>
 
         {/* Combo Meals Section */}
-        {comboMeals.length > 0 && (
+        {activeCategory === 'comboMeals' && comboMeals.length > 0 && (
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-6">
               <h2 className="text-3xl font-bold text-card-foreground">Combo Meals</h2>
@@ -267,21 +252,22 @@ const MenuCustom = () => {
         />
         {/* Add Category Dialog */}
         <AddCategoryDialog
+          refetch={refetch}
           showCategoryDialog={showCategoryDialog}
           setShowCategoryDialog={setShowCategoryDialog}
         />
         {/* Create Combo Dialog */}
         <CreateComboDialog
+          refetch={refetch}
           showComboDialog={showComboDialog}
           setShowComboDialog={setShowComboDialog}
         />
-
         {/* Edit Item Dialog */}
         <EditItemDialog
+          refetch={refetch}
           showEditItemDialog={showEditItemDialog}
           setShowEditItemDialog={setShowEditItemDialog}
           editingItem={editingItem}
-          setEditingItem={setEditingItem}
         />
       </div>
     </div>

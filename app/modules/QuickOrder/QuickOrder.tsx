@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import SelectTable from './components/SelectTable';
-import type { Table } from '~/store/tableState/table.types';
 import { AnimatePresence, motion } from 'framer-motion';
-import DoOrder from './components/DoOrder';
 import { useTableStore } from '~/store/tableState/table.state';
+import DoOrder from './components/DoOrder';
 
 const QuickOrder = () => {
   const [showTable, setShowTable] = useState(true);
@@ -32,7 +31,7 @@ const QuickOrder = () => {
             exit={{ opacity: 0, x: 100 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            <DoOrder 
+            <DoOrder
               selectedTable={selectedTable}
               onBack={() => setShowTable(true)}
             />

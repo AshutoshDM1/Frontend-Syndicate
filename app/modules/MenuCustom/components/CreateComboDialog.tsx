@@ -8,9 +8,11 @@ import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 const CreateComboDialog = ({
   showComboDialog,
   setShowComboDialog,
+  refetch,
 }: {
   showComboDialog: boolean;
   setShowComboDialog: (show: boolean) => void;
+  refetch: () => void;
 }) => {
   const { menuItems } = useMenuItemStore();
   const [newCombo, setNewCombo] = useState({
@@ -54,7 +56,7 @@ const CreateComboDialog = ({
                 {menuItems.map((item) => (
                   <label
                     key={item.id}
-                    className="flex items-center p-2 border rounded cursor-pointer hover:bg-muted"
+                    className="flex items-center p-2 border rounded hover:bg-muted"
                   >
                     <Checkbox
                       checked={newCombo.selectedItems.includes(item.id)}
@@ -90,7 +92,7 @@ const CreateComboDialog = ({
                   {newCombo.selectedItems
                     .reduce((total, itemId) => {
                       const item = menuItems.find((i) => i.id === itemId);
-                      return total + (parseFloat(item?.price || '0') || 0);
+                      return total + (parseFloat(item?.price.toString() || '0') || 0);
                     }, 0)
                     .toFixed(2)}
                 </div>
@@ -99,7 +101,7 @@ const CreateComboDialog = ({
                   {(
                     newCombo.selectedItems.reduce((total, itemId) => {
                       const item = menuItems.find((i) => i.id === itemId);
-                      return total + (parseFloat(item?.price || '0') || 0);
+                      return total + (parseFloat(item?.price.toString() || '0') || 0);
                     }, 0) * 0.85
                   ).toFixed(2)}
                 </div>

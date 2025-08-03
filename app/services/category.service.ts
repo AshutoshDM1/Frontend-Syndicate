@@ -21,3 +21,25 @@ export const GetCategories = async () => {
     handleError(error);
   }
 };
+
+export const DeleteCategory = async (id: string) => {
+  try {
+    const response = await api.delete(`/categories/${id}`);
+    const data = response.data as APIResponse<CategoryApiResponse>;
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+interface CreateCategoryInput extends Omit<Category, 'id' | 'createdAt' | 'updatedAt'> {}
+
+export const CreateCategory = async (category: CreateCategoryInput) => {
+  try {
+    const response = await api.post(`/categories`, category);
+    const data = response.data as APIResponse<CategoryApiResponse>;
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};

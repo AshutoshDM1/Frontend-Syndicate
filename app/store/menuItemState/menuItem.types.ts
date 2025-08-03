@@ -2,11 +2,11 @@ export interface MenuItem {
   id: string;
   name: string;
   description: string;
-  price: string;
+  price: string | number;
   image: string;
   categoryId: string;
   isAvailable: boolean;
-  rating: string;
+  rating: string | number;
   prepTime: number;
   calories: number;
   isVegetarian: boolean;
