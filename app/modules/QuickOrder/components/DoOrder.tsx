@@ -1,29 +1,29 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Badge } from "~/components/ui/badge";
-import { Separator } from "~/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { 
-  ArrowLeft, 
-  ShoppingCart, 
-  Plus, 
-  Minus, 
-  Trash2, 
-  Clock, 
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { Badge } from '~/components/ui/badge';
+import { Separator } from '~/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
+import { ScrollArea } from '~/components/ui/scroll-area';
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Plus,
+  Minus,
+  Trash2,
+  Clock,
   Users,
   CreditCard,
   Receipt,
-  CheckCircle
-} from "lucide-react";
-import type { Table } from "~/store/tableState/table.types";
-import type { MenuItem } from "~/store/menuItemState/menuItem.types";
-import { MenuItemCard } from "~/components/common/MenuItemCard";
-import { cn } from "~/lib/utils";
-import { useMenuItemStore } from "~/store/menuItemState/menuItem.state";
-import { useCategoryStore } from "~/store/menuItemState/category.state";
+  CheckCircle,
+} from 'lucide-react';
+import type { Table } from '~/store/tableState/table.types';
+import type { MenuItem } from '~/store/menuItemState/menuItem.types';
+import { MenuItemCard } from '~/components/common/MenuItemCard';
+import { cn } from '~/lib/utils';
+import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
+import { useCategoryStore } from '~/store/menuItemState/category.state';
 
 interface CartItem {
   item: MenuItem;
@@ -31,13 +31,19 @@ interface CartItem {
   notes?: string;
 }
 
-const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBack: () => void }) => {
+const DoOrder = ({
+  selectedTable,
+  onBack,
+}: {
+  selectedTable: Table | null;
+  onBack: () => void;
+}) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [orderNotes, setOrderNotes] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,20 +53,19 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
 
   // Filter menu items based on search and category
   const filteredItems = menuItems.filter((item: MenuItem) => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || item.categoryId === selectedCategory;
+    const matchesSearch =
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || item.categoryId === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   const addToCart = (item: MenuItem) => {
-    setCart(prev => {
-      const existingItem = prev.find(cartItem => cartItem.item.id === item.id);
+    setCart((prev) => {
+      const existingItem = prev.find((cartItem) => cartItem.item.id === item.id);
       if (existingItem) {
-        return prev.map(cartItem =>
-          cartItem.item.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
+        return prev.map((cartItem) =>
+          cartItem.item.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
         );
       }
       return [...prev, { item, quantity: 1 }];
@@ -68,7 +73,7 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
   };
 
   const removeFromCart = (itemId: string) => {
-    setCart(prev => prev.filter(cartItem => cartItem.item.id !== itemId));
+    setCart((prev) => prev.filter((cartItem) => cartItem.item.id !== itemId));
   };
 
   const updateQuantity = (itemId: string, quantity: number) => {
@@ -76,18 +81,14 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
       removeFromCart(itemId);
       return;
     }
-    setCart(prev =>
-      prev.map(cartItem =>
-        cartItem.item.id === itemId
-          ? { ...cartItem, quantity }
-          : cartItem
-      )
+    setCart((prev) =>
+      prev.map((cartItem) => (cartItem.item.id === itemId ? { ...cartItem, quantity } : cartItem))
     );
   };
 
   const getTotalAmount = () => {
     return cart.reduce((total, cartItem) => {
-      return total + (parseFloat(cartItem.item.price.toString()) * cartItem.quantity);
+      return total + parseFloat(cartItem.item.price.toString()) * cartItem.quantity;
     }, 0);
   };
 
@@ -97,31 +98,31 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
 
   const handleSubmitOrder = async () => {
     if (!selectedTable || cart.length === 0) return;
-    
+
     setIsSubmitting(true);
     try {
       // TODO: Implement order submission logic
-      console.log("Submitting order:", {
+      console.log('Submitting order:', {
         tableId: selectedTable.id,
         customerName,
         customerPhone,
         orderNotes,
         items: cart,
-        totalAmount: getTotalAmount()
+        totalAmount: getTotalAmount(),
       });
-      
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Clear cart and reset form
       setCart([]);
-      setCustomerName("");
-      setCustomerPhone("");
-      setOrderNotes("");
-      
+      setCustomerName('');
+      setCustomerPhone('');
+      setOrderNotes('');
+
       // Show success message or redirect
     } catch (error) {
-      console.error("Error submitting order:", error);
+      console.error('Error submitting order:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -140,10 +141,6 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
           <div>
             <h1 className="text-2xl font-bold">Table {selectedTable.number}</h1>
             <p className="text-sm text-muted-foreground">
@@ -155,6 +152,10 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
           <Badge variant={selectedTable.status === 'OCCUPIED' ? 'destructive' : 'secondary'}>
             {selectedTable.status}
           </Badge>
+          <Button className="text-base px-6" onClick={onBack}>
+            <ArrowLeft className="w-6 h-6 mr-2" />
+            Back
+          </Button>
           {selectedTable.customerCount && (
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Users className="w-4 h-4" />
@@ -176,20 +177,20 @@ const DoOrder = ({ selectedTable, onBack }: { selectedTable: Table | null, onBac
               onChange={(e) => setSearchQuery(e.target.value)}
               className="max-w-md"
             />
-            
+
             {categories.length > 0 && (
               <div className="flex gap-2 overflow-x-auto pb-2">
                 <Button
-                  variant={selectedCategory === "all" ? "default" : "outline"}
+                  variant={selectedCategory === 'all' ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setSelectedCategory("all")}
+                  onClick={() => setSelectedCategory('all')}
                 >
                   All Items
                 </Button>
                 {categories.map((category: { id: string; name: string }) => (
                   <Button
                     key={category.id}
-                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    variant={selectedCategory === category.id ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setSelectedCategory(category.id)}
                   >
@@ -291,9 +292,7 @@ const CartPanel = ({ cart, onUpdateQuantity, onRemoveItem, totalAmount }: CartPa
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
         <ShoppingCart className="w-16 h-16 text-muted-foreground mb-4" />
         <h3 className="text-lg font-semibold mb-2">Your cart is empty</h3>
-        <p className="text-sm text-muted-foreground">
-          Add items from the menu to get started
-        </p>
+        <p className="text-sm text-muted-foreground">Add items from the menu to get started</p>
       </div>
     );
   }
@@ -302,7 +301,7 @@ const CartPanel = ({ cart, onUpdateQuantity, onRemoveItem, totalAmount }: CartPa
     <div className="flex-1 flex flex-col">
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {cart.map(cartItem => (
+          {cart.map((cartItem) => (
             <CartItemCard
               key={cartItem.item.id}
               cartItem={cartItem}
@@ -312,11 +311,13 @@ const CartPanel = ({ cart, onUpdateQuantity, onRemoveItem, totalAmount }: CartPa
           ))}
         </div>
       </ScrollArea>
-      
+
       <div className="p-4 border-t bg-muted/50">
         <div className="flex items-center justify-between mb-2">
           <span className="font-semibold">Total Items:</span>
-          <span className="font-semibold">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+          <span className="font-semibold">
+            {cart.reduce((sum, item) => sum + item.quantity, 0)}
+          </span>
         </div>
         <div className="flex items-center justify-between text-lg font-bold">
           <span>Total Amount:</span>
@@ -341,11 +342,7 @@ const CartItemCard = ({ cartItem, onUpdateQuantity, onRemoveItem }: CartItemCard
   return (
     <Card className="overflow-hidden">
       <div className="flex">
-        <img
-          src={item.image}
-          alt={item.name}
-          className="w-20 h-20 object-cover"
-        />
+        <img src={item.image} alt={item.name} className="w-20 h-20 object-cover" />
         <div className="flex-1 p-3">
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -364,7 +361,7 @@ const CartItemCard = ({ cartItem, onUpdateQuantity, onRemoveItem }: CartItemCard
               <Trash2 className="w-3 h-3" />
             </Button>
           </div>
-          
+
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2">
               <Button
@@ -385,9 +382,7 @@ const CartItemCard = ({ cartItem, onUpdateQuantity, onRemoveItem }: CartItemCard
                 <Plus className="w-3 h-3" />
               </Button>
             </div>
-            <span className="text-sm font-semibold">
-              ${itemTotal.toFixed(2)}
-            </span>
+            <span className="text-sm font-semibold">${itemTotal.toFixed(2)}</span>
           </div>
         </div>
       </div>
@@ -421,15 +416,15 @@ const OrderPanel = ({
   orderNotes,
   setOrderNotes,
   onSubmitOrder,
-  isSubmitting
+  isSubmitting,
 }: OrderPanelProps) => {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="flex-1 flex flex-col p-4 space-y-4">
       {/* Order Summary */}
-      <Card>
-        <CardHeader>
+      <Card className='py-5 px-2 gap-3' >
+        <CardHeader>  
           <CardTitle className="flex items-center gap-2">
             <Receipt className="w-5 h-5" />
             Order Summary
@@ -453,7 +448,7 @@ const OrderPanel = ({
       </Card>
 
       {/* Customer Information */}
-      <Card>
+      <Card className='py-5 px-2 gap-3'>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" />
@@ -461,7 +456,7 @@ const OrderPanel = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="space-y-2">
+          <div className="flex gap-2 space-y-6">
             <label className="text-sm font-medium">Customer Name</label>
             <Input
               placeholder="Enter customer name"
@@ -481,7 +476,7 @@ const OrderPanel = ({
       </Card>
 
       {/* Order Notes */}
-      <Card>
+      <Card className='py-5 px-2 gap-3'>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="w-5 h-5" />
