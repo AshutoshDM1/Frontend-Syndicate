@@ -24,9 +24,12 @@ import { MenuItemCard } from '~/components/common/MenuItemCard';
 import { cn } from '~/lib/utils';
 import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 import { useCategoryStore } from '~/store/menuItemState/category.state';
+import { MakeOrder, type MakeOrderType } from '~/services/MakeOrder';
+import { OrderStatus, PaymentMethod } from '~/store/orderState/order.types';
+import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
 
 interface CartItem {
-  item: MenuItem;
+  item: MenuItem | ComboMeal;
   quantity: number;
   notes?: string;
 }
@@ -97,22 +100,35 @@ const DoOrder = ({
   };
 
   const handleSubmitOrder = async () => {
+    
     if (!selectedTable || cart.length === 0) return;
-
     setIsSubmitting(true);
     try {
       // TODO: Implement order submission logic
-      console.log('Submitting order:', {
-        tableId: selectedTable.id,
+      const MakeOrderData : MakeOrderType = {
+        tableId: selectedTable.id || '',
         customerName,
         customerPhone,
-        orderNotes,
-        items: cart,
         totalAmount: getTotalAmount(),
-      });
-
+        status: OrderStatus.STARTED,
+        paymentMethod: PaymentMethod.CASH,
+        orderItems: cart.map((item) => ({
+          menuItemId: 'menuItemId' in item.item ? item.item.id : undefined,
+          comboMealId: 'id' in item.item ? item.item.id : undefined,
+          quantity: item.quantity,
+        })),
+      };
+      console.log(MakeOrderData);
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // const response = await MakeOrder({
+      //   tableId: selectedTable.id || '',
+      //   customerName,
+      //   customerPhone,
+      //   totalAmount: getTotalAmount(),
+      //   status: OrderStatus.STARTED,
+      //   paymentMethod: PaymentMethod.CASH,
+      //   orderItems: cart,
+      // });
 
       // Clear cart and reset form
       setCart([]);
@@ -423,8 +439,8 @@ const OrderPanel = ({
   return (
     <div className="flex-1 flex flex-col p-4 space-y-4">
       {/* Order Summary */}
-      <Card className='py-5 px-2 gap-3' >
-        <CardHeader>  
+      <Card className="py-5 px-2 gap-3">
+        <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Receipt className="w-5 h-5" />
             Order Summary
@@ -448,7 +464,7 @@ const OrderPanel = ({
       </Card>
 
       {/* Customer Information */}
-      <Card className='py-5 px-2 gap-3'>
+      <Card className="py-5 px-2 gap-3">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" />
@@ -456,7 +472,7 @@ const OrderPanel = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex gap-2 space-y-6">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Customer Name</label>
             <Input
               placeholder="Enter customer name"
@@ -464,7 +480,7 @@ const OrderPanel = ({
               onChange={(e) => setCustomerName(e.target.value)}
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Phone Number</label>
             <Input
               placeholder="Enter phone number"
@@ -476,7 +492,7 @@ const OrderPanel = ({
       </Card>
 
       {/* Order Notes */}
-      <Card className='py-5 px-2 gap-3'>
+      <Card className="py-5 px-2 gap-3">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="w-5 h-5" />
