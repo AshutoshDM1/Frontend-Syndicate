@@ -5,7 +5,7 @@ const Dashboard = () => {
   return (
     <>
       <MainDashboard />
-      <MainContant />
+      {/* <MainContant /> */}
     </>
   );
 };

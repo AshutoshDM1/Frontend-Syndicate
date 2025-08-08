@@ -27,8 +27,17 @@ import { useCategoryStore } from '~/store/menuItemState/category.state';
 import { MakeOrder, type MakeOrderType } from '~/services/MakeOrder';
 import { OrderStatus, PaymentMethod } from '~/store/orderState/order.types';
 import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
+import { useComboMealStore } from '~/store/menuItemState/comboMeal.state';
+import CartPanel from './CartPanel';
+import OrderPanel from './OrderPanel';
+import ComboMealCard from '~/modules/MenuCustom/components/ComboMealCard';
 
-interface CartItem {
+enum CartItemType {
+  MENU_ITEM = 'menuItem',
+  COMBO_MEAL = 'comboMeal',
+}
+export interface CartItem {
+  type: CartItemType;
   item: MenuItem | ComboMeal;
   quantity: number;
   notes?: string;
@@ -52,6 +61,7 @@ const DoOrder = ({
   const [error, setError] = useState<string | null>(null);
 
   const { menuItems } = useMenuItemStore();
+  const { comboMeals } = useComboMealStore();
   const { categories } = useCategoryStore();
 
   // Filter menu items based on search and category
@@ -63,15 +73,15 @@ const DoOrder = ({
     return matchesSearch && matchesCategory;
   });
 
-  const addToCart = (item: MenuItem) => {
+  const addToCart = (item: CartItem) => {
     setCart((prev) => {
-      const existingItem = prev.find((cartItem) => cartItem.item.id === item.id);
+      const existingItem = prev.find((cartItem) => cartItem.item.id === item.item.id);
       if (existingItem) {
         return prev.map((cartItem) =>
-          cartItem.item.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+          cartItem.item.id === item.item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
         );
       }
-      return [...prev, { item, quantity: 1 }];
+      return [...prev, item];
     });
   };
 
@@ -100,12 +110,11 @@ const DoOrder = ({
   };
 
   const handleSubmitOrder = async () => {
-    
     if (!selectedTable || cart.length === 0) return;
     setIsSubmitting(true);
     try {
       // TODO: Implement order submission logic
-      const MakeOrderData : MakeOrderType = {
+      const MakeOrderData: MakeOrderType = {
         tableId: selectedTable.id || '',
         customerName,
         customerPhone,
@@ -113,22 +122,14 @@ const DoOrder = ({
         status: OrderStatus.STARTED,
         paymentMethod: PaymentMethod.CASH,
         orderItems: cart.map((item) => ({
-          menuItemId: 'menuItemId' in item.item ? item.item.id : undefined,
-          comboMealId: 'id' in item.item ? item.item.id : undefined,
+          itemId: item.item.id,
+          itemType: item.type,
           quantity: item.quantity,
         })),
       };
       console.log(MakeOrderData);
-      // Simulate API call
-      // const response = await MakeOrder({
-      //   tableId: selectedTable.id || '',
-      //   customerName,
-      //   customerPhone,
-      //   totalAmount: getTotalAmount(),
-      //   status: OrderStatus.STARTED,
-      //   paymentMethod: PaymentMethod.CASH,
-      //   orderItems: cart,
-      // });
+      const response = await MakeOrder(MakeOrderData);
+      console.log(response);
 
       // Clear cart and reset form
       setCart([]);
@@ -203,6 +204,13 @@ const DoOrder = ({
                 >
                   All Items
                 </Button>
+                <Button
+                  variant={selectedCategory === 'comboMeals' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedCategory('comboMeals')}
+                >
+                  Combo Meals
+                </Button>
                 {categories.map((category: { id: string; name: string }) => (
                   <Button
                     key={category.id}
@@ -231,19 +239,35 @@ const DoOrder = ({
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {filteredItems.map((item: MenuItem) => (
-                  <div key={item.id} className="relative">
-                    <MenuItemCard item={item} />
-                    <Button
-                      size="sm"
-                      className="absolute bottom-4 right-4 h-8 w-8 rounded-full shadow-lg"
-                      onClick={() => addToCart(item)}
-                      disabled={!item.isAvailable}
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
+                {selectedCategory === 'comboMeals'
+                  ? comboMeals.map((item: ComboMeal) => (
+                      <div key={item.id} className="relative">
+                        <ComboMealCard combo={item} />
+                        <Button
+                          size="sm"
+                          className="absolute bottom-4 right-4 h-8 w-8 rounded-full shadow-lg"
+                          onClick={() => {
+                            addToCart({ type: CartItemType.COMBO_MEAL, item, quantity: 1 });
+                          }}
+                          disabled={!item.isAvailable}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))
+                  : filteredItems.map((item: MenuItem) => (
+                      <div key={item.id} className="relative">
+                        <MenuItemCard item={item} />
+                        <Button
+                          size="sm"
+                          className="absolute bottom-4 right-4 h-8 w-8 rounded-full shadow-lg"
+                          onClick={() => addToCart({ type: CartItemType.MENU_ITEM, item, quantity: 1 })}
+                          disabled={!item.isAvailable}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
               </div>
             )}
           </div>
@@ -289,246 +313,6 @@ const DoOrder = ({
             </TabsContent>
           </Tabs>
         </div>
-      </div>
-    </div>
-  );
-};
-
-// Cart Panel Component
-interface CartPanelProps {
-  cart: CartItem[];
-  onUpdateQuantity: (itemId: string, quantity: number) => void;
-  onRemoveItem: (itemId: string) => void;
-  totalAmount: number;
-}
-
-const CartPanel = ({ cart, onUpdateQuantity, onRemoveItem, totalAmount }: CartPanelProps) => {
-  if (cart.length === 0) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-        <ShoppingCart className="w-16 h-16 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold mb-2">Your cart is empty</h3>
-        <p className="text-sm text-muted-foreground">Add items from the menu to get started</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex-1 flex flex-col">
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {cart.map((cartItem) => (
-            <CartItemCard
-              key={cartItem.item.id}
-              cartItem={cartItem}
-              onUpdateQuantity={onUpdateQuantity}
-              onRemoveItem={onRemoveItem}
-            />
-          ))}
-        </div>
-      </ScrollArea>
-
-      <div className="p-4 border-t bg-muted/50">
-        <div className="flex items-center justify-between mb-2">
-          <span className="font-semibold">Total Items:</span>
-          <span className="font-semibold">
-            {cart.reduce((sum, item) => sum + item.quantity, 0)}
-          </span>
-        </div>
-        <div className="flex items-center justify-between text-lg font-bold">
-          <span>Total Amount:</span>
-          <span className="text-primary">${totalAmount.toFixed(2)}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Cart Item Card Component
-interface CartItemCardProps {
-  cartItem: CartItem;
-  onUpdateQuantity: (itemId: string, quantity: number) => void;
-  onRemoveItem: (itemId: string) => void;
-}
-
-const CartItemCard = ({ cartItem, onUpdateQuantity, onRemoveItem }: CartItemCardProps) => {
-  const { item, quantity } = cartItem;
-  const itemTotal = parseFloat(item.price.toString()) * quantity;
-
-  return (
-    <Card className="overflow-hidden">
-      <div className="flex">
-        <img src={item.image} alt={item.name} className="w-20 h-20 object-cover" />
-        <div className="flex-1 p-3">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h4 className="font-semibold text-sm line-clamp-1">{item.name}</h4>
-              <p className="text-xs text-muted-foreground line-clamp-1">{item.description}</p>
-              <p className="text-sm font-semibold text-primary mt-1">
-                ${parseFloat(item.price.toString()).toFixed(2)}
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onRemoveItem(item.id)}
-              className="h-6 w-6 p-0 text-muted-foreground hover:text-destructive"
-            >
-              <Trash2 className="w-3 h-3" />
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-6 w-6 p-0"
-                onClick={() => onUpdateQuantity(item.id, quantity - 1)}
-              >
-                <Minus className="w-3 h-3" />
-              </Button>
-              <span className="text-sm font-medium w-8 text-center">{quantity}</span>
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-6 w-6 p-0"
-                onClick={() => onUpdateQuantity(item.id, quantity + 1)}
-              >
-                <Plus className="w-3 h-3" />
-              </Button>
-            </div>
-            <span className="text-sm font-semibold">${itemTotal.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-    </Card>
-  );
-};
-
-// Order Panel Component
-interface OrderPanelProps {
-  selectedTable: Table;
-  cart: CartItem[];
-  totalAmount: number;
-  customerName: string;
-  setCustomerName: (name: string) => void;
-  customerPhone: string;
-  setCustomerPhone: (phone: string) => void;
-  orderNotes: string;
-  setOrderNotes: (notes: string) => void;
-  onSubmitOrder: () => void;
-  isSubmitting: boolean;
-}
-
-const OrderPanel = ({
-  selectedTable,
-  cart,
-  totalAmount,
-  customerName,
-  setCustomerName,
-  customerPhone,
-  setCustomerPhone,
-  orderNotes,
-  setOrderNotes,
-  onSubmitOrder,
-  isSubmitting,
-}: OrderPanelProps) => {
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  return (
-    <div className="flex-1 flex flex-col p-4 space-y-4">
-      {/* Order Summary */}
-      <Card className="py-5 px-2 gap-3">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Receipt className="w-5 h-5" />
-            Order Summary
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Table:</span>
-            <span className="font-medium">#{selectedTable.number}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Items:</span>
-            <span className="font-medium">{totalItems}</span>
-          </div>
-          <Separator />
-          <div className="flex items-center justify-between text-lg font-bold">
-            <span>Total:</span>
-            <span className="text-primary">${totalAmount.toFixed(2)}</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Customer Information */}
-      <Card className="py-5 px-2 gap-3">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5" />
-            Customer Details
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Customer Name</label>
-            <Input
-              placeholder="Enter customer name"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Phone Number</label>
-            <Input
-              placeholder="Enter phone number"
-              value={customerPhone}
-              onChange={(e) => setCustomerPhone(e.target.value)}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Order Notes */}
-      <Card className="py-5 px-2 gap-3">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
-            Order Notes
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <textarea
-            placeholder="Add special instructions or notes..."
-            value={orderNotes}
-            onChange={(e) => setOrderNotes(e.target.value)}
-            className="w-full min-h-20 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-        </CardContent>
-      </Card>
-
-      {/* Submit Order */}
-      <div className="mt-auto">
-        <Button
-          className="w-full"
-          size="lg"
-          onClick={onSubmitOrder}
-          disabled={cart.length === 0 || isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <CheckCircle className="w-5 h-5 mr-2" />
-              Submit Order
-            </>
-          )}
-        </Button>
       </div>
     </div>
   );
