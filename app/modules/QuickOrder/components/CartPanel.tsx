@@ -6,12 +6,13 @@ import type { CartItem } from './DoOrder';
 
 interface CartPanelProps {
   cart: CartItem[];
+  handleNext: () => void;
   onUpdateQuantity: (itemId: string, quantity: number) => void;
   onRemoveItem: (itemId: string) => void;
   totalAmount: number;
 }
 
-const CartPanel = ({ cart, onUpdateQuantity, onRemoveItem, totalAmount }: CartPanelProps) => {
+const CartPanel = ({ cart, handleNext, onUpdateQuantity, onRemoveItem, totalAmount }: CartPanelProps) => {
   if (cart.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
@@ -44,10 +45,15 @@ const CartPanel = ({ cart, onUpdateQuantity, onRemoveItem, totalAmount }: CartPa
             {cart.reduce((sum, item) => sum + item.quantity, 0)}
           </span>
         </div>
-        <div className="flex items-center justify-between text-lg font-bold">
+        <div className="flex items-center justify-between text-lg font-bold mb-3">
           <span>Total Amount:</span>
           <span className="text-primary">${totalAmount.toFixed(2)}</span>
         </div>
+          <Button
+          onClick={handleNext}
+          className='bg-primary text-white w-full' >
+            Next
+          </Button>
       </div>
     </div>
   );

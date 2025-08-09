@@ -64,6 +64,8 @@ const DoOrder = ({
   const { comboMeals } = useComboMealStore();
   const { categories } = useCategoryStore();
 
+  const [OrderPannel , setOrderPannel] = useState<"cart" | "order">("cart");
+  console.log(OrderPannel);
   // Filter menu items based on search and category
   const filteredItems = menuItems.filter((item: MenuItem) => {
     const matchesSearch =
@@ -117,7 +119,7 @@ const DoOrder = ({
       const MakeOrderData: MakeOrderType = {
         tableId: selectedTable.id || '',
         customerName,
-        customerPhone,
+        customerPhone : parseInt(customerPhone),
         totalAmount: getTotalAmount(),
         status: OrderStatus.STARTED,
         paymentMethod: PaymentMethod.CASH,
@@ -275,13 +277,13 @@ const DoOrder = ({
 
         {/* Right Panel - Cart and Order */}
         <div className="w-96 border-l flex flex-col">
-          <Tabs defaultValue="cart" className="flex-1 flex flex-col">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="cart" className="flex items-center gap-2">
+          <Tabs value={OrderPannel} onValueChange={(value) => setOrderPannel(value as "cart" | "order")} className="flex-1 flex flex-col">
+            <TabsList className="grid w-full grid-cols-2 px-3">
+              <TabsTrigger value="cart" className="flex items-center gap-2 cursor-pointer">
                 <ShoppingCart className="w-4 h-4" />
                 Cart ({getTotalItems()})
               </TabsTrigger>
-              <TabsTrigger value="order" className="flex items-center gap-2">
+              <TabsTrigger value="order" className="flex items-center gap-2 cursor-pointer">
                 <Receipt className="w-4 h-4" />
                 Order
               </TabsTrigger>
@@ -290,6 +292,9 @@ const DoOrder = ({
             <TabsContent value="cart" className="flex-1 flex flex-col">
               <CartPanel
                 cart={cart}
+                handleNext={() => {
+                  setOrderPannel("order");  
+                }}
                 onUpdateQuantity={updateQuantity}
                 onRemoveItem={removeFromCart}
                 totalAmount={getTotalAmount()}

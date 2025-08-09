@@ -12,7 +12,13 @@ import {
 } from '~/components/ui/select';
 import { Checkbox } from '~/components/ui/checkbox';
 import { useQuery } from '@tanstack/react-query';
-import { CreateMenuItem, DeleteMenuItem, GetMenuItems, type CreateMenuItemInput, type MenuItemApiResponse } from '~/services/MenuItem.service';
+import {
+  CreateMenuItem,
+  DeleteMenuItem,
+  GetMenuItems,
+  type CreateMenuItemInput,
+  type MenuItemApiResponse,
+} from '~/services/MenuItem.service';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 import { useComboMealStore } from '~/store/menuItemState/comboMeal.state';
@@ -35,7 +41,7 @@ const MenuCustom = () => {
   const { menuItems, setMenuItems } = useMenuItemStore();
   const { comboMeals, setComboMeals } = useComboMealStore();
 
-  const { isPending, isError, isSuccess, data, error , refetch} = useQuery({
+  const { isPending, isError, isSuccess, data, error, refetch } = useQuery({
     queryKey: ['menuItems', 'categories', 'comboMeals'],
     queryFn: async () => {
       const [menuItems, categories, comboMeals] = await Promise.all([
@@ -116,82 +122,81 @@ const MenuCustom = () => {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-6">
-          <div className="space-y-3">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-              Menu Customization
-            </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
-              Manage your restaurant menu items, categories, and combos with our intuitive interface
-            </p>
-            <div className="flex items-center gap-4 pt-2">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-sm font-medium text-green-700">
-                  {menuItems.filter((item) => item.isAvailable).length} items available
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-orange-500 rounded-full" />
-                <span className="text-sm font-medium text-orange-700">
-                  {categories.length} categories
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-purple-500 rounded-full" />
-                <span className="text-sm font-medium text-purple-700">
-                  {comboMeals.length} combo deals
-                </span>
-              </div>
+    <div className="">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-6">
+        <div className="space-y-3">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+            Menu Customization
+          </h1>
+          <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
+            Manage your restaurant menu items, categories, and combos with our intuitive interface
+          </p>
+          <div className="flex items-center gap-4 pt-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-sm font-medium text-green-700">
+                {menuItems.filter((item) => item.isAvailable).length} items available
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-orange-500 rounded-full" />
+              <span className="text-sm font-medium text-orange-700">
+                {categories.length} categories
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-purple-500 rounded-full" />
+              <span className="text-sm font-medium text-purple-700">
+                {comboMeals.length} combo deals
+              </span>
             </div>
           </div>
-          <div className="flex flex-wrap gap-3">
-            <Button
-              onClick={() => setShowCategoryDialog(true)}
-                className="bg-emerald-500 hover:bg-emerald-600 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Category
-            </Button>
-            <Button
-              onClick={handleAddMenuItem}
-              className="bg-blue-500 hover:bg-blue-600 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Item
-            </Button>
-            <Button
-              onClick={() => setShowComboDialog(true)}
-              className="bg-primary hover:bg-primary/80 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Create Combo
-            </Button>
-          </div>
         </div>
+        <div className="flex flex-wrap gap-3">
+          <Button
+            onClick={() => setShowCategoryDialog(true)}
+            className="bg-emerald-500 hover:bg-emerald-600 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Category
+          </Button>
+          <Button
+            onClick={handleAddMenuItem}
+            className="bg-blue-500 hover:bg-blue-600 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Item
+          </Button>
+          <Button
+            onClick={() => setShowComboDialog(true)}
+            className="bg-primary hover:bg-primary/80 text-primary-foreground font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Create Combo
+          </Button>
+        </div>
+      </div>
 
-        {/* Category Filter */}
-        <div className="flex gap-4 mb-8 flex-wrap pb-2">
-          <div className="flex gap-4">
-            <Button
-              variant={activeCategory === 'all' ? 'default' : 'outline'}
-              onClick={() => setActiveCategory('all')}
-              className="whitespace-nowrap"
-            >
-              All Items ({menuItems.length})
-            </Button> 
-            <Button
-              variant={activeCategory === 'comboMeals' ? 'default' : 'outline'}
-              onClick={() => setActiveCategory('comboMeals')}
-              className="whitespace-nowrap"
-            >
-              Combo Meals ({comboMeals.length})
-            </Button>{' '}
-          </div>
-          <div className="flex flex-wrap gap-4">
+      {/* Category Filter */}
+      <div className="flex gap-4 mb-8 flex-wrap pb-2">
+        <div className="flex gap-4">
+          <Button
+            variant={activeCategory === 'all' ? 'default' : 'outline'}
+            onClick={() => setActiveCategory('all')}
+            className="whitespace-nowrap"
+          >
+            All Items ({menuItems.length})
+          </Button>
+          <Button
+            variant={activeCategory === 'comboMeals' ? 'default' : 'outline'}
+            onClick={() => setActiveCategory('comboMeals')}
+            className="whitespace-nowrap"
+          >
+            Combo Meals ({comboMeals.length})
+          </Button>{' '}
+        </div>
+        <div className="flex flex-wrap gap-4">
           {categories.map((category) => (
             <div key={category.id} className="flex items-center gap-2">
               <Button
@@ -211,65 +216,65 @@ const MenuCustom = () => {
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>
-          ))}</div>
-        </div>
-
-        {/* Combo Meals Section */}
-        {activeCategory === 'comboMeals' && comboMeals.length > 0 && (
-          <div className="mb-12">
-            <div className="flex items-center gap-3 mb-6">
-              <h2 className="text-3xl font-bold text-card-foreground">Combo Meals</h2>
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                SPECIAL OFFERS
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-              {comboMeals.map((combo) => (
-                <ComboMealCard combo={combo} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Menu Items Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-          {filteredItems.map((item) => (
-            <MenuCard
-              item={item}
-              setEditingItem={setEditingItem}
-              setShowEditItemDialog={setShowEditItemDialog}
-              handleItemClick={handleItemClick}
-              handleDeleteMenuItem={handleDeleteMenuItem}
-            />
           ))}
         </div>
-        {/* Item Customization Dialog */}
-        <ItemCustomizationDialog
-          showItemDialog={showItemDialog}
-          setShowItemDialog={setShowItemDialog}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-        />
-        {/* Add Category Dialog */}
-        <AddCategoryDialog
-          refetch={refetch}
-          showCategoryDialog={showCategoryDialog}
-          setShowCategoryDialog={setShowCategoryDialog}
-        />
-        {/* Create Combo Dialog */}
-        <CreateComboDialog
-          refetch={refetch}
-          showComboDialog={showComboDialog}
-          setShowComboDialog={setShowComboDialog}
-        />
-        {/* Edit Item Dialog */}
-        <EditItemDialog
-          refetch={refetch}
-          showEditItemDialog={showEditItemDialog}
-          setShowEditItemDialog={setShowEditItemDialog}
-          editingItem={editingItem}
-        />
       </div>
+
+      {/* Combo Meals Section */}
+      {activeCategory === 'comboMeals' && comboMeals.length > 0 && (
+        <div className="mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <h2 className="text-3xl font-bold text-card-foreground">Combo Meals</h2>
+            <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+              SPECIAL OFFERS
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            {comboMeals.map((combo) => (
+              <ComboMealCard combo={combo} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Menu Items Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        {filteredItems.map((item) => (
+          <MenuCard
+            item={item}
+            setEditingItem={setEditingItem}
+            setShowEditItemDialog={setShowEditItemDialog}
+            handleItemClick={handleItemClick}
+            handleDeleteMenuItem={handleDeleteMenuItem}
+          />
+        ))}
+      </div>
+      {/* Item Customization Dialog */}
+      <ItemCustomizationDialog
+        showItemDialog={showItemDialog}
+        setShowItemDialog={setShowItemDialog}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+      />
+      {/* Add Category Dialog */}
+      <AddCategoryDialog
+        refetch={refetch}
+        showCategoryDialog={showCategoryDialog}
+        setShowCategoryDialog={setShowCategoryDialog}
+      />
+      {/* Create Combo Dialog */}
+      <CreateComboDialog
+        refetch={refetch}
+        showComboDialog={showComboDialog}
+        setShowComboDialog={setShowComboDialog}
+      />
+      {/* Edit Item Dialog */}
+      <EditItemDialog
+        refetch={refetch}
+        showEditItemDialog={showEditItemDialog}
+        setShowEditItemDialog={setShowEditItemDialog}
+        editingItem={editingItem}
+      />
     </div>
   );
 };

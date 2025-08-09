@@ -3,7 +3,7 @@ import { Card } from '~/components/ui/card';
 import { TableStatus, type Table } from '~/store/tableState/table.types';
 import { useNavigate } from 'react-router';
 
-const TableManagePannel = ({
+const MonitorTablePannel = ({
   selectedTable,
   setSelectedTable,
 }: {
@@ -15,7 +15,7 @@ const TableManagePannel = ({
   const handleStartOrder = () => {
     console.log('Starting new order for table:', selectedTable);
     // Navigate to order taking screen or open order modal
-    router('/quick-order');
+    router('/dashboard/quick-order');
   };
 
   const handleViewOrder = () => {
@@ -148,4 +148,4 @@ const TableManagePannel = ({
   );
 };
 
-export default TableManagePannel;
+  export default MonitorTablePannel;

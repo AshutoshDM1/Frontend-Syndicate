@@ -3,9 +3,9 @@ import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { useTableStore } from '~/store/tableState/table.state';
 import { TableStatus, type Table } from '~/store/tableState/table.types';
-import TableSVG from '~/modules/TableManagement/components/TableSVG';
 import { useQuery } from '@tanstack/react-query';
 import { GetTables } from '~/services/table.service';
+import TableSVG from '~/modules/MonitorTable/components/TableSVG';
 
 const SelectTable = ({ setShowTable }: { setShowTable: (show: boolean) => void }) => {
   const { tables, selectedTable, setSelectedTable, setTables } = useTableStore();

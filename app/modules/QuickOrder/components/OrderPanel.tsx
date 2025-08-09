@@ -83,6 +83,7 @@ const OrderPanel = ({
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Phone Number</label>
             <Input
+              type="number"
               placeholder="Enter phone number"
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
@@ -92,7 +93,7 @@ const OrderPanel = ({
       </Card>
 
       {/* Order Notes */}
-      <Card className="py-5 px-2 gap-3">
+      <Card className="py-5 px-2 gap-3 hidden">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="w-5 h-5" />

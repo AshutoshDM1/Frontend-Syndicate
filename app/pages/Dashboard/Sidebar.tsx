@@ -20,9 +20,14 @@ const Sidebar = () => {
       label: 'Manage User',
       href: '/dashboard/manage-user',
     },
+    MonitorTables: {
+      icon: <TableIcon size={20} />,
+      label: 'Monitor Tables',
+      href: '/dashboard/monitor-tables',
+    },
     TableManagement: {
       icon: <TableIcon size={20} />,
-      label: 'Tables',
+      label: 'Table Management',
       href: '/dashboard/table-management',
     },
     MenuCustom: {

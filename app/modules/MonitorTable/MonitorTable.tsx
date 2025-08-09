@@ -3,11 +3,11 @@ import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { useTableStore } from '~/store/tableState/table.state';
 import { type Table } from '~/store/tableState/table.types';
-import TableSVG from '~/modules/TableManagement/components/TableSVG';
 import { useQuery } from '@tanstack/react-query';
 import { GetTables } from '~/services/table.service';
-import TableManagePannel from './components/TableManagePannel';
+import TableManagePannel from './components/MonitorTablePannel';
 import HeadingTable from './components/HeadingTable';
+import TableSVG from './components/TableSVG';
 
 const TableMange = () => {
   const { tables, selectedTable, setSelectedTable, setTables } = useTableStore();
@@ -33,7 +33,7 @@ const TableMange = () => {
 
   return (
     <>
-      <div className="p-6 min-h-screen">
+      <div className="">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Table Management</h1>
@@ -41,7 +41,7 @@ const TableMange = () => {
         </div>
 
         {/* Floor Selection */}
-        <div className="mb-6">
+        <div className="mb-5">
           <div className="flex gap-2">
             {[1, 2, 3].map((floor) => (
               <Button

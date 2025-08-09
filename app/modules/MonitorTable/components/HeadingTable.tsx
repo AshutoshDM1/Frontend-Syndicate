@@ -4,7 +4,7 @@ const HeadingTable = () => {
   return (
     <>
       {/* Status Legend */}
-      <Card className="mb-6 p-4 bg-card border-border">
+      <Card className="mb-5 p-4 bg-card border-border">
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-green-500 rounded-sm shadow-sm"></div>
