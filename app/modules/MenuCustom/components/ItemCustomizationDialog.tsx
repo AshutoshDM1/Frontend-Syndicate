@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "~
 import { Button } from "~/components/ui/button";
 import type { MenuItem } from "~/store/menuItemState/menuItem.types";
 import { useState } from "react";
+import { Checkbox } from "~/components/ui/checkbox";
 
 const ItemCustomizationDialog = ({
   showItemDialog,
@@ -23,13 +24,14 @@ const ItemCustomizationDialog = ({
       const modifier = selectedItem.modifiers.find((m) => m.id === modifierId);
       return total + (modifier?.price || 0);
     }, 0);
-    return selectedItem.price + modifierPrice;
+    return parseFloat(selectedItem.price.toString()) + modifierPrice;
   };
 
   const toggleModifier = (modifierId: string) => {
-    setSelectedModifiers((prev) =>
-      prev.includes(modifierId) ? prev.filter((id) => id !== modifierId) : [...prev, modifierId]
-    );
+    setSelectedModifiers((prev) => {
+      console.log(prev);
+      return prev.includes(modifierId) ? prev.filter((id) => id !== modifierId) : [...prev, modifierId]
+    });
   };
   return (
     <>
@@ -59,11 +61,10 @@ const ItemCustomizationDialog = ({
                         className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-muted"
                       >
                         <div className="flex items-center">
-                          <input
-                            type="checkbox"
+                          <Checkbox
+                          className="mr-2 mt-1" 
                             checked={selectedModifiers.includes(modifier.id)}
-                            onChange={() => toggleModifier(modifier.id)}
-                            className="mr-3 text-primary"
+                            onCheckedChange={() => toggleModifier(modifier.id)}
                           />
                           <span>{modifier.modifier.name}</span>
                         </div>
@@ -86,7 +87,7 @@ const ItemCustomizationDialog = ({
                   </span>
                 </div>
                 <Button className="w-full" onClick={() => setShowItemDialog(false)}>
-                  Add to Cart
+                  Save
                 </Button>
               </div>
             </div>

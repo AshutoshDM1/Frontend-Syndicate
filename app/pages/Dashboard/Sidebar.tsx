@@ -1,11 +1,25 @@
-import { AppWindow, LayoutDashboard, ShoppingCart, TableIcon, UserIcon, Menu } from 'lucide-react';
-import { useLocation } from 'react-router';
+import {
+  AppWindow,
+  LayoutDashboard,
+  ShoppingCart,
+  TableIcon,
+  UserIcon,
+  Menu,
+  LogOut,
+  UserPlus,
+  LogIn,
+} from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router';
 import { useState } from 'react';
 import SidebarLink from '~/components/SidebarLink';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
+import { authClient, useSession } from '~/lib/auth-client';
 
 const Sidebar = () => {
+  const { signOut } = authClient;
+  const { data: session } = useSession();
+  const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -20,10 +34,15 @@ const Sidebar = () => {
       label: 'Manage User',
       href: '/dashboard/manage-user',
     },
+    MonitorTables: {
+      icon: <TableIcon size={20} />,
+      label: 'Monitor Tables',
+      href: '/dashboard/monitor-tables',
+    },
     TableManagement: {
       icon: <TableIcon size={20} />,
-      label: 'Tables',
-      href: '/dashboard/table-management',
+      label: 'Table Management',
+      href: '/dashboard/manage-table',
     },
     MenuCustom: {
       icon: <AppWindow size={20} />,
@@ -44,16 +63,63 @@ const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex flex-col w-64 bg-card border-r border-border p-4">
-        <div className="flex items-center gap-4 pb-4">
-          <img src="/favicon.png" alt="logo" className="w-10 h-10" />
-          <h1 className="text-lg font-semibold text-foreground ">Restzo</h1>
+      <div className="hidden lg:flex flex-col justify-between w-64 bg-card border-r border-border p-4">
+        <div>
+          <div className="flex items-center gap-4 pb-4">
+            <img src="/favicon.png" alt="logo" className="w-10 h-10" />
+            <h1 className="text-lg font-semibold text-foreground ">Restzo</h1>
+          </div>
+          <nav className="space-y-3 flex flex-col gap-1 w-full">
+            {Object.values(NavLink).map((link) => (
+              <SidebarLink key={link.label} {...link} isActive={location.pathname === link.href} />
+            ))}
+          </nav>{' '}
         </div>
-        <nav className="space-y-3 flex flex-col gap-1 w-full">
-          {Object.values(NavLink).map((link) => (
-            <SidebarLink key={link.label} {...link} isActive={location.pathname === link.href} />
-          ))}
-        </nav>
+        <div className="flex flex-col gap-1 w-full">
+          {session ? (
+            <>
+              <div className="flex items-center gap-4 pb-4">
+                <img 
+                  src={session?.user?.image || '/favicon.png'} 
+                  alt={`${session?.user?.name || 'User'} avatar`} 
+                  className="w-10 h-10 rounded-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/favicon.png';
+                  }}
+                />
+                <h1 className="text-md font-medium text-foreground ">{session?.user?.name}</h1>
+              </div>
+              <Button variant="outline" size="sm" className="w-full" onClick={() => {
+                signOut()
+                navigate('/login')
+              }
+              }>
+                <LogOut size={20} />
+                Logout
+              </Button>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-4 pb-4">
+              <Button
+                size="sm"
+                className="bg-foreground/30 hover:bg-foreground/40 text-foreground w-full"
+                onClick={() => navigate('/signup')}
+              >
+                <UserPlus size={20} />
+                Signup
+              </Button>
+              <Button
+                size="sm"
+                className="bg-primary text-primary-foreground w-full"
+                onClick={() => navigate('/login')}
+              >
+                <LogIn size={20} />
+                Login
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Mobile Navigation */}

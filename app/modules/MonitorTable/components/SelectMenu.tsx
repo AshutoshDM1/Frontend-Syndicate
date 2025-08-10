@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '~/components/ui/dialog';
-import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
@@ -21,10 +19,9 @@ interface SelectMenuProps {
 }
 
 export function SelectMenu({ open, onClose, onSelect }: SelectMenuProps) {
-  const { menuItems, setMenuItems } = useMenuItemStore();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const { isPending, isError, isSuccess, data, error } = useQuery({
+  const { menuItems, setMenuItems } = useMenuItemStore();
+  const { isSuccess, data } = useQuery({
     queryKey: ['menuItems'],
     queryFn: GetMenuItems,
   });
@@ -34,11 +31,6 @@ export function SelectMenu({ open, onClose, onSelect }: SelectMenuProps) {
       setMenuItems(data.data.menuItems);
     }
   }, [isSuccess]);
-  const handleSelect = (item: MenuItem) => {
-    setSelectedId(item.id);
-    onSelect(item);
-    onClose();
-  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

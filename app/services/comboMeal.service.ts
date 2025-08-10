@@ -21,3 +21,15 @@ export const GetComboMeals = async () => {
     handleError(error);
   }
 };
+
+export const CreateComboMeal = async (comboMeal: ComboMeal) => {
+  try {
+    const response = await api.post(`/combo-meals`, comboMeal);
+    const data = response.data as APIResponse<ComboMealApiResponse>;
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+

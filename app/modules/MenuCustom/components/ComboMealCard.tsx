@@ -3,7 +3,7 @@ import { Button } from '~/components/ui/button';
 import { ShoppingCart } from 'lucide-react';
 import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
 
-const ComboMealCard = ({ combo }: { combo: ComboMeal }) => {
+const ComboMealCard = ({ combo, edit }: { combo: ComboMeal; edit: boolean }) => {
   return (
     <>
       <Card
@@ -35,40 +35,32 @@ const ComboMealCard = ({ combo }: { combo: ComboMeal }) => {
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent pointer-events-none" />
         </div>
 
-        <CardContent className="p-5 space-y-3">
+        <CardContent className="p-5 flex flex-col justify-between h-40">
           {/* Title */}
           <div className="space-y-1">
             <h3 className="font-bold text-lg text-card-foreground leading-tight">{combo.name}</h3>
-            <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+            <p className="text-muted-foreground text-sm leading-relaxed line-clamp-1">
               {combo.description}
             </p>
           </div>
 
-          {/* Included Items Preview */}
-
           {/* Pricing */}
-          <div className="flex flex-col items-start justify-center gap-2 pt-2">
+          <div className="flex flex-col items-start justify-center gap-2 pt-0">
             <div className="flex items-start justify-center gap-1">
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-primary">
-                  {/* ${combo.price.toFixed(2)} */}
-                </span>
+                <span className="text-2xl font-bold text-primary">${combo.price}</span>
                 <span className="text-sm text-muted-foreground font-medium">USD</span>
               </div>
             </div>
-            <Button
-              size="sm"
-              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Add Combo
-            </Button>
-          </div>
-
-          {/* Deal Indicator */}
-          <div className="flex items-center gap-2 pt-1">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-medium text-green-700">Limited Time Offer</span>
+            {edit && (
+              <Button
+                size="sm"
+                className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Edit Combo
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

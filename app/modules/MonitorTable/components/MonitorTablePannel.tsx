@@ -3,7 +3,7 @@ import { Card } from '~/components/ui/card';
 import { TableStatus, type Table } from '~/store/tableState/table.types';
 import { useNavigate } from 'react-router';
 
-const TableManagePannel = ({
+const MonitorTablePannel = ({
   selectedTable,
   setSelectedTable,
 }: {
@@ -15,7 +15,7 @@ const TableManagePannel = ({
   const handleStartOrder = () => {
     console.log('Starting new order for table:', selectedTable);
     // Navigate to order taking screen or open order modal
-    router('/quick-order');
+    router('/dashboard/quick-order');
   };
 
   const handleViewOrder = () => {
@@ -40,7 +40,7 @@ const TableManagePannel = ({
 
   return (
     <>
-      <Card className="p-6 min-w-[30rem] bg-card border-border">
+      <Card className="p-6 min-w-[20rem] xl:min-w-[30rem] bg-card border-border">
         <div className="space-y-4">
           {/* Table Info Header */}
           <div className="flex items-center justify-between border-b border-border pb-4">
@@ -65,24 +65,6 @@ const TableManagePannel = ({
                   <span className="text-muted-foreground">Order ID:</span>
                   <p className="font-medium text-card-foreground">{selectedTable?.orderId}</p>
                 </div>
-                <div>
-                  <span className="text-muted-foreground">Customers:</span>
-                  <p className="font-medium text-card-foreground">{selectedTable?.customerCount}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Order Time:</span>
-                  <p className="font-medium text-card-foreground">
-                    {selectedTable?.orderStartTime}
-                  </p>
-                </div>
-                {selectedTable?.totalAmount && (
-                  <div>
-                    <span className="text-muted-foreground">Total:</span>
-                    <p className="font-medium text-card-foreground">
-                      ${selectedTable?.totalAmount}
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -148,4 +130,4 @@ const TableManagePannel = ({
   );
 };
 
-export default TableManagePannel;
+  export default MonitorTablePannel;

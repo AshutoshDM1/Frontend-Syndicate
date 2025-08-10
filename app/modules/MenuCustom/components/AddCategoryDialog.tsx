@@ -9,13 +9,17 @@ import {
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { useState } from 'react';
+import { CreateCategory } from '~/services/category.service';
+import { toast } from 'sonner';
 
 const AddCategoryDialog = ({
   showCategoryDialog,
   setShowCategoryDialog,
+  refetch,
 }: {
   showCategoryDialog: boolean;
   setShowCategoryDialog: (show: boolean) => void;
+  refetch: () => void;
 }) => {
   const [newCategory, setNewCategory] = useState({
     name: '',
@@ -23,14 +27,30 @@ const AddCategoryDialog = ({
     isActive: true,
   });
 
-  const handleAddCategory = () => {
-    console.log(newCategory);
+  const handleAddCategory = async () => {
+    try {
+      toast.loading('Adding category...');
+      await CreateCategory(newCategory);
+      toast.dismiss();
+      toast.success('Category added successfully');
+      setNewCategory({
+        name: '',
+        description: '',
+        isActive: true,
+      });
+      setShowCategoryDialog(false);
+      refetch();
+    } catch (error) {
+      console.log(error);
+      toast.dismiss();
+      toast.error('Failed to add category');
+    }
   };
 
   return (
     <>
       <Dialog open={showCategoryDialog} onOpenChange={setShowCategoryDialog}>
-        <DialogContent>
+        <DialogContent className='w-full max-w-md' >
           <DialogClose onClick={() => setShowCategoryDialog(false)} />
           <DialogHeader>
             <DialogTitle>Add New Category</DialogTitle>
@@ -54,7 +74,14 @@ const AddCategoryDialog = ({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCategoryDialog(false)}>
+            <Button variant="outline" onClick={() => {
+              setShowCategoryDialog(false);
+              setNewCategory({
+                name: '',
+                description: '',
+                isActive: true,
+              });
+            }}>
               Cancel
             </Button>
             <Button onClick={handleAddCategory}>Add Category</Button>

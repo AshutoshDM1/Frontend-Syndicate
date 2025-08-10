@@ -16,6 +16,8 @@ const MenuCard = ({
   handleItemClick: (item: MenuItem) => void;
   handleDeleteMenuItem: (itemId: string) => void;
 }) => {
+
+
   return (
     <>
       <Card
@@ -35,19 +37,18 @@ const MenuCard = ({
             <Button
               size="icon"
               variant="secondary"
-              className="h-8 w-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 shadow-lg border-0"
+              className="h-8 w-8 bg-white/90 dark:bg-zinc-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-zinc-800 shadow-lg border-0"
               onClick={(e) => {
                 e.stopPropagation();
                 setEditingItem(item);
                 setShowEditItemDialog(true);
               }}
             >
-              <Edit className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+              <Edit className="w-4 h-4 text-zinc-700 dark:text-zinc-300" />
             </Button>
             <Button
               size="icon"
-              variant="destructive"
-              className="h-8 w-8 bg-red-500/90 backdrop-blur-sm hover:bg-red-600 shadow-lg border-0"
+              className="h-8 w-8 bg-red-500 backdrop-blur-sm hover:bg-red-600 shadow-lg border-0"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDeleteMenuItem(item.id);
@@ -59,9 +60,9 @@ const MenuCard = ({
 
           {/* Rating Badge - Top Left */}
           <div className="absolute top-3 left-3">
-            <div className="flex items-center gap-1 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm px-2 py-1 rounded-full shadow-lg">
+            <div className="flex items-center gap-1 bg-white/95 dark:bg-zinc-800/95 backdrop-blur-sm px-2 py-1 rounded-full shadow-lg">
               <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                 {item.rating}
               </span>
             </div>
@@ -70,8 +71,8 @@ const MenuCard = ({
           {/* Availability Overlay */}
           {!item.isAvailable && (
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
-              <div className="bg-white/95 dark:bg-gray-800/95 px-4 py-2 rounded-full">
-                <span className="text-gray-800 dark:text-gray-200 font-semibold text-sm">
+              <div className="bg-white/95 dark:bg-zinc-800/95 px-4 py-2 rounded-full">
+                <span className="text-zinc-800 dark:text-zinc-200 font-semibold text-sm">
                   Unavailable
                 </span>
               </div>
@@ -125,7 +126,7 @@ const MenuCard = ({
               size="sm"
               onClick={() => handleItemClick(item)}
               disabled={!item.isAvailable}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
             >
               <ShoppingCart className="w-4 h-4 mr-1" />
               Customize

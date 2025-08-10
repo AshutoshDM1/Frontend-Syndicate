@@ -1,22 +1,38 @@
-FROM node:20-alpine AS development-dependencies-env
-COPY . /app
-WORKDIR /app
-RUN npm ci
+# Use Bun's official image for better performance
+FROM oven/bun:1-alpine AS base
 
-FROM node:20-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
+# Set working directory
 WORKDIR /app
-RUN npm ci --omit=dev
 
-FROM node:20-alpine AS build-env
-COPY . /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
-RUN npm run build
+# Copy package files
+COPY package.json bun.lock ./
 
-FROM node:20-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
+# Install dependencies
+RUN bun install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN bun run build
+
+# Production stage
+FROM oven/bun:1-alpine AS production
+
+# Install react-router-serve globally
+RUN bun add -g @react-router/serve
+
+# Set working directory
 WORKDIR /app
-CMD ["npm", "run", "start"]
+
+# Copy built application
+COPY --from=base /app/build ./build
+
+# Copy package.json for serve command
+COPY --from=base /app/package.json ./
+
+# Expose port
+EXPOSE 3000
+
+# Start the application using react-router-serve
+CMD ["bunx", "@react-router/serve", "./build/server/index.js"]
