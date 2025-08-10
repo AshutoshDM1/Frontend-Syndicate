@@ -140,6 +140,7 @@ const EditItemDialog = ({
       toast.success('Item updated successfully');
       refetch();
     } catch (error) {
+      console.log(error);
       toast.dismiss();
     } finally {
       form.reset();

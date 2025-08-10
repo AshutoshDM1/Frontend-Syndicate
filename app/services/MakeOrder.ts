@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import type { APIResponse } from '~/types/api.types';
 import api, { handleError } from './api';
 import { OrderStatus, PaymentMethod } from '~/store/orderState/order.types';

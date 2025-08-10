@@ -1,5 +1,3 @@
-import type { MenuItem } from "./menuItem.types";
-
 export interface ComboMeal {
     id: string;
     name: string;
@@ -9,5 +7,4 @@ export interface ComboMeal {
     isAvailable: boolean;
     createdAt?: string;
     updatedAt?: string;
-    // items: any[];
 }

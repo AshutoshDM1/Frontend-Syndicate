@@ -23,6 +23,7 @@ const CreateComboDialog = ({
 
   const handleCreateCombo = () => {
     console.log(newCombo);
+    console.log(refetch);
   };
 
   return (

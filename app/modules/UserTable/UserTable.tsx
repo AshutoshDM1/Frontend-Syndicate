@@ -67,11 +67,15 @@ const ManageUser = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 text-foreground">
+    <div>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">User Management</h1>
+          <p className="text-muted-foreground">Manage your users and their roles</p>
+        </div>
       <div className="flex flex-wrap gap-3 justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-foreground">User Management</h1>
         <div className="flex items-center gap-4">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               className="cursor-pointer"
               variant={filter === 'ALL' ? 'default' : 'outline'}
@@ -125,7 +129,7 @@ const ManageUser = () => {
         <div className="text-center text-muted-foreground py-8">Error: {error?.message}</div>
       ) : (
         <>
-          <div className="rounded-lg border border-border bg-card shadow-sm">
+          <div className="rounded-lg border border-border shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow>

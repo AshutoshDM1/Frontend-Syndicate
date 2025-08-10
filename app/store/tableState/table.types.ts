@@ -17,10 +17,6 @@ export interface Table {
   number: string;
   status: TableStatus;
   size: TableSize;
-  orderStartTime?: string;
   orderId?: string;
-  customerCount?: number;
   floor: number;
-  totalAmount?: number;
-  orderItems?: number;
 }

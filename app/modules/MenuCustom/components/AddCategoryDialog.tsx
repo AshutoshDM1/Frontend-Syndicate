@@ -41,6 +41,7 @@ const AddCategoryDialog = ({
       setShowCategoryDialog(false);
       refetch();
     } catch (error) {
+      console.log(error);
       toast.dismiss();
       toast.error('Failed to add category');
     }

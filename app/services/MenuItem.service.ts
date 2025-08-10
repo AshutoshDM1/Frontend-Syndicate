@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type  
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import api, { handleError } from './api';
 import type { APIResponse } from '~/types/api.types';

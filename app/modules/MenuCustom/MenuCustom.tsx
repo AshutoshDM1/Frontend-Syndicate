@@ -1,32 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Card, CardContent } from '~/components/ui/card';
+import { useState } from 'react';
 import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Plus, Edit, Trash2, Star, ShoppingCart } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '~/components/ui/select';
-import { Checkbox } from '~/components/ui/checkbox';
-import { useQuery } from '@tanstack/react-query';
-import {
-  CreateMenuItem,
   DeleteMenuItem,
-  GetMenuItems,
-  type CreateMenuItemInput,
-  type MenuItemApiResponse,
 } from '~/services/MenuItem.service';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
-import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
-import { useComboMealStore } from '~/store/menuItemState/comboMeal.state';
-import { useCategoryStore } from '~/store/menuItemState/category.state';
-import { DeleteCategory, GetCategories } from '~/services/category.service';
-import { GetComboMeals } from '~/services/comboMeal.service';
-import type { Category } from '~/store/menuItemState/category.types';
-import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
+import { DeleteCategory } from '~/services/category.service';
 import ItemCustomizationDialog from './components/ItemCustomizationDialog';
 import AddCategoryDialog from './components/AddCategoryDialog';
 import CreateComboDialog from './components/CreateComboDialog';
@@ -34,33 +13,12 @@ import EditItemDialog from './components/EditItemDialog';
 import MenuCard from './components/MenuCard';
 import ComboMealCard from './components/ComboMealCard';
 import { toast } from 'sonner';
+import useManuItems from '~/hooks/useManuItems';
+import Loading from '~/components/common/Loading';
 
 const MenuCustom = () => {
-  // Sample data
-  const { categories, setCategories } = useCategoryStore();
-  const { menuItems, setMenuItems } = useMenuItemStore();
-  const { comboMeals, setComboMeals } = useComboMealStore();
-
-  const { isPending, isError, isSuccess, data, error, refetch } = useQuery({
-    queryKey: ['menuItems', 'categories', 'comboMeals'],
-    queryFn: async () => {
-      const [menuItems, categories, comboMeals] = await Promise.all([
-        GetMenuItems(),
-        GetCategories(),
-        GetComboMeals(),
-      ]);
-      return { menuItems, categories, comboMeals };
-    },
-  });
-
-  useEffect(() => {
-    if (isSuccess && data && data.menuItems && data.categories && data.comboMeals) {
-      console.log(data);
-      setMenuItems(data.menuItems.data.menuItems as MenuItem[]);
-      setCategories(data.categories.data.categories as Category[]);
-      setComboMeals(data.comboMeals.data.comboMeals as ComboMeal[]);
-    }
-  }, [isSuccess, data]);
+  const { categories, menuItems, comboMeals, isPending, isError, error, refetch } =
+    useManuItems();
 
   // State for dialogs and forms
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -69,7 +27,6 @@ const MenuCustom = () => {
   const [showComboDialog, setShowComboDialog] = useState(false);
   const [showEditItemDialog, setShowEditItemDialog] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [selectedModifiers, setSelectedModifiers] = useState<string[]>([]);
 
   // Form states
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
@@ -83,7 +40,6 @@ const MenuCustom = () => {
   // Handle item selection and show customization dialog
   const handleItemClick = (item: MenuItem) => {
     setSelectedItem(item);
-    setSelectedModifiers([]);
     setShowItemDialog(true);
   };
 
@@ -96,6 +52,7 @@ const MenuCustom = () => {
       toast.success('Category deleted successfully');
       refetch();
     } catch (error) {
+      console.log(error);
       toast.dismiss();
       toast.error('Failed to delete category');
     }
@@ -116,6 +73,7 @@ const MenuCustom = () => {
       toast.success('Item deleted successfully');
       refetch();
     } catch (error) {
+      console.log(error);
       toast.dismiss();
       toast.error('Failed to delete item');
     }
@@ -124,15 +82,13 @@ const MenuCustom = () => {
   return (
     <div className="">
       {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-foreground mb-2">Menu Customization</h1>
+        <p className="text-muted-foreground">Manage your restaurant menu items, categories, and combos with our intuitive interface</p>
+      </div>
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-6">
         <div className="space-y-3">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-            Menu Customization
-          </h1>
-          <p className="text-muted-foreground text-lg leading-relaxed max-w-2xl">
-            Manage your restaurant menu items, categories, and combos with our intuitive interface
-          </p>
-          <div className="flex items-center gap-4 pt-2">
+          <div className="flex flex-wrap items-center gap-4 pt-2">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
               <span className="text-sm font-medium text-green-700">
@@ -194,7 +150,7 @@ const MenuCustom = () => {
             className="whitespace-nowrap"
           >
             Combo Meals ({comboMeals.length})
-          </Button>{' '}
+          </Button>
         </div>
         <div className="flex flex-wrap gap-4">
           {categories.map((category) => (
@@ -231,15 +187,26 @@ const MenuCustom = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
             {comboMeals.map((combo) => (
-              <ComboMealCard combo={combo} />
+              <ComboMealCard edit={true} combo={combo} />
             ))}
           </div>
         </div>
       )}
 
       {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-        {filteredItems.map((item) => (
+        {isPending && (
+          <div className="flex justify-center items-center h-full w-full mt-10">
+            <Loading />
+          </div>
+        )}
+        {isError && (
+          <div className="flex justify-center items-center h-full">
+            <p className="text-muted-foreground">Error: {error?.message}</p>
+          </div>
+        )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+
+        {filteredItems.length > 0 && filteredItems.map((item) => (
           <MenuCard
             item={item}
             setEditingItem={setEditingItem}

@@ -1,27 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { useTableStore } from '~/store/tableState/table.state';
 import { type Table } from '~/store/tableState/table.types';
-import { useQuery } from '@tanstack/react-query';
-import { GetTables } from '~/services/table.service';
 import TableManagePannel from './components/MonitorTablePannel';
 import HeadingTable from './components/HeadingTable';
 import TableSVG from './components/TableSVG';
+import useTable from '~/hooks/useTable';
+import Loading from '~/components/common/Loading';
 
 const TableMange = () => {
-  const { tables, selectedTable, setSelectedTable, setTables } = useTableStore();
+  const { selectedTable, setSelectedTable } = useTableStore();
   const [selectedFloor, setSelectedFloor] = useState(1);
-  const { isPending, isError, isSuccess, data, error } = useQuery({
-    queryKey: ['tables'],
-    queryFn: GetTables,
-  });
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      setTables(data.data.tables);
-    }
-  }, [isSuccess]);
+  const { tables, isPending, isError, error } = useTable();
 
   // Filter tables by selected floor
   const filteredTables = tables.filter((table) => table.floor === selectedFloor);
@@ -33,10 +24,10 @@ const TableMange = () => {
 
   return (
     <>
-      <div className="">
+      <div>
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Table Management</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Table Monitor</h1>
           <p className="text-muted-foreground">Monitor table status and manage customer orders</p>
         </div>
 
@@ -58,16 +49,18 @@ const TableMange = () => {
         <HeadingTable />
 
         {/* Tables Grid */}
-        <div className="flex gap-4">
-          <Card className="p-8  min-h-[70vh] max-h-[70vh] w-2/3 overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
+        <div className="flex flex-col xl:flex-row-reverse gap-4">
+          {/* Selected Table Management Panel */}
+          <TableManagePannel selectedTable={selectedTable} setSelectedTable={setSelectedTable} />
+          <Card className="p-8  min-h-[70vh] max-h-[70vh] w-full xl:w-2/3 overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
             {isPending && (
               <div className="flex items-center justify-center h-full">
-                <p className="text-muted-foreground">Loading...</p>
+                <Loading />
               </div>
             )}
             {isError && (
               <div className="flex items-center justify-center h-full">
-                <p className="text-muted-foreground">Error: {error.message}</p>
+                <p className="text-muted-foreground">Error: {error?.message}</p>
               </div>
             )}
             <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
@@ -86,7 +79,6 @@ const TableMange = () => {
                       key={table.id}
                       tableNumber={table.number}
                       status={table.status}
-                      time={table.orderStartTime}
                       reservationId={table.orderId}
                       isSelected={isSelected}
                       onClick={() => handleTableSelect(table)}
@@ -95,9 +87,6 @@ const TableMange = () => {
                 })}
             </div>
           </Card>
-
-          {/* Selected Table Management Panel */}
-          <TableManagePannel selectedTable={selectedTable} setSelectedTable={setSelectedTable} />
         </div>
       </div>
     </>

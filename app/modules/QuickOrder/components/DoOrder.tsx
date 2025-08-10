@@ -1,36 +1,24 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
+import { useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Badge } from '~/components/ui/badge';
-import { Separator } from '~/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
-import { ScrollArea } from '~/components/ui/scroll-area';
 import {
   ArrowLeft,
   ShoppingCart,
   Plus,
-  Minus,
-  Trash2,
-  Clock,
-  Users,
-  CreditCard,
   Receipt,
-  CheckCircle,
 } from 'lucide-react';
 import type { Table } from '~/store/tableState/table.types';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import { MenuItemCard } from '~/components/common/MenuItemCard';
-import { cn } from '~/lib/utils';
-import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
-import { useCategoryStore } from '~/store/menuItemState/category.state';
 import { MakeOrder, type MakeOrderType } from '~/services/MakeOrder';
 import { OrderStatus, PaymentMethod } from '~/store/orderState/order.types';
 import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
-import { useComboMealStore } from '~/store/menuItemState/comboMeal.state';
 import CartPanel from './CartPanel';
 import OrderPanel from './OrderPanel';
 import ComboMealCard from '~/modules/MenuCustom/components/ComboMealCard';
+import useManuItems from '~/hooks/useManuItems';
 
 enum CartItemType {
   MENU_ITEM = 'menuItem',
@@ -57,15 +45,11 @@ const DoOrder = ({
   const [customerPhone, setCustomerPhone] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const { menuItems } = useMenuItemStore();
-  const { comboMeals } = useComboMealStore();
-  const { categories } = useCategoryStore();
+  const { menuItems, comboMeals, categories, isPending, error } = useManuItems();
 
-  const [OrderPannel , setOrderPannel] = useState<"cart" | "order">("cart");
-  console.log(OrderPannel);
+  const [OrderPannel, setOrderPannel] = useState<'cart' | 'order'>('cart');
+
   // Filter menu items based on search and category
   const filteredItems = menuItems.filter((item: MenuItem) => {
     const matchesSearch =
@@ -80,7 +64,9 @@ const DoOrder = ({
       const existingItem = prev.find((cartItem) => cartItem.item.id === item.item.id);
       if (existingItem) {
         return prev.map((cartItem) =>
-          cartItem.item.id === item.item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+          cartItem.item.id === item.item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
         );
       }
       return [...prev, item];
@@ -119,7 +105,7 @@ const DoOrder = ({
       const MakeOrderData: MakeOrderType = {
         tableId: selectedTable.id || '',
         customerName,
-        customerPhone : parseInt(customerPhone),
+        customerPhone: parseInt(customerPhone),
         totalAmount: getTotalAmount(),
         status: OrderStatus.STARTED,
         paymentMethod: PaymentMethod.CASH,
@@ -129,9 +115,8 @@ const DoOrder = ({
           quantity: item.quantity,
         })),
       };
-      console.log(MakeOrderData);
-      const response = await MakeOrder(MakeOrderData);
-      console.log(response);
+
+      await MakeOrder(MakeOrderData);
 
       // Clear cart and reset form
       setCart([]);
@@ -175,19 +160,13 @@ const DoOrder = ({
             <ArrowLeft className="w-6 h-6 mr-2" />
             Back
           </Button>
-          {selectedTable.customerCount && (
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Users className="w-4 h-4" />
-              {selectedTable.customerCount} guests
-            </div>
-          )}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col-reverse xl:flex-row"> 
         {/* Left Panel - Menu */}
-        <div className="flex-1 flex flex-col">
+        <div className="max-h-[87vh] flex-1 flex flex-col overflow-y-auto">
           {/* Search and Filters */}
           <div className="p-4 border-b space-y-4">
             <Input
@@ -198,7 +177,7 @@ const DoOrder = ({
             />
 
             {categories.length > 0 && (
-              <div className="flex gap-2 overflow-x-auto pb-2">
+              <div className="flex gap-2 flex-wrap pb-2">
                 <Button
                   variant={selectedCategory === 'all' ? 'default' : 'outline'}
                   size="sm"
@@ -229,10 +208,10 @@ const DoOrder = ({
 
           {/* Menu Items Grid */}
           <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
-            {isLoading ? (
+            {isPending ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-80 bg-muted animate-pulse rounded-lg" />
+                  <div key={i} className="h-96 bg-muted animate-pulse rounded-lg" />
                 ))}
               </div>
             ) : error ? (
@@ -240,11 +219,11 @@ const DoOrder = ({
                 <p className="text-destructive">Error loading menu items</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
                 {selectedCategory === 'comboMeals'
                   ? comboMeals.map((item: ComboMeal) => (
                       <div key={item.id} className="relative">
-                        <ComboMealCard combo={item} />
+                        <ComboMealCard edit={false} combo={item} />
                         <Button
                           size="sm"
                           className="absolute bottom-4 right-4 h-8 w-8 rounded-full shadow-lg"
@@ -263,7 +242,9 @@ const DoOrder = ({
                         <Button
                           size="sm"
                           className="absolute bottom-4 right-4 h-8 w-8 rounded-full shadow-lg"
-                          onClick={() => addToCart({ type: CartItemType.MENU_ITEM, item, quantity: 1 })}
+                          onClick={() =>
+                            addToCart({ type: CartItemType.MENU_ITEM, item, quantity: 1 })
+                          }
                           disabled={!item.isAvailable}
                         >
                           <Plus className="w-4 h-4" />
@@ -276,8 +257,12 @@ const DoOrder = ({
         </div>
 
         {/* Right Panel - Cart and Order */}
-        <div className="w-96 border-l flex flex-col">
-          <Tabs value={OrderPannel} onValueChange={(value) => setOrderPannel(value as "cart" | "order")} className="flex-1 flex flex-col">
+        <div className="w-full xl:w-96 border-l flex flex-col">
+          <Tabs
+            value={OrderPannel}
+            onValueChange={(value) => setOrderPannel(value as 'cart' | 'order')}
+            className="flex-1 flex flex-col"
+          >
             <TabsList className="grid w-full grid-cols-2 px-3">
               <TabsTrigger value="cart" className="flex items-center gap-2 cursor-pointer">
                 <ShoppingCart className="w-4 h-4" />
@@ -293,7 +278,7 @@ const DoOrder = ({
               <CartPanel
                 cart={cart}
                 handleNext={() => {
-                  setOrderPannel("order");  
+                  setOrderPannel('order');
                 }}
                 onUpdateQuantity={updateQuantity}
                 onRemoveItem={removeFromCart}
