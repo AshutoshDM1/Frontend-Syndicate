@@ -1,15 +1,15 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type  
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import api, { handleError } from './api';
 import type { APIResponse } from '~/types/api.types';
 
 export interface MenuItemApiResponse {
   pagination: {
-    limit: number,
-    page: number,
-    total: number,
-    totalPages: number
-  }
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
   menuItems: MenuItem[];
 }
 
@@ -23,7 +23,8 @@ export const GetMenuItems = async () => {
   }
 };
 
-export interface UpdateMenuItemInput extends Omit<MenuItem, 'createdAt' | 'updatedAt' | 'category' | 'modifiers'> {}
+export interface UpdateMenuItemInput
+  extends Omit<MenuItem, 'createdAt' | 'updatedAt' | 'category' | 'modifiers'> {}
 
 export const UpdateMenuItem = async (item: UpdateMenuItemInput) => {
   try {
@@ -56,5 +57,3 @@ export const DeleteMenuItem = async (id: string) => {
     handleError(error);
   }
 };
-
-

@@ -130,4 +130,4 @@ const MonitorTablePannel = ({
   );
 };
 
-  export default MonitorTablePannel;
+export default MonitorTablePannel;

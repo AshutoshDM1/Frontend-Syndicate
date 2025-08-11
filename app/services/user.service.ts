@@ -4,7 +4,7 @@ import type { APIResponse } from '~/types/api.types';
 
 export interface UserApiResponse {
   users: UserType[];
-  role : UserRole | 'ALL';
+  role: UserRole | 'ALL';
 }
 
 export const GetUserDetailTable = async (role: string = 'ALL') => {

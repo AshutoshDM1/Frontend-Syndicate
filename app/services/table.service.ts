@@ -4,11 +4,11 @@ import type { APIResponse } from '~/types/api.types';
 
 export interface TableApiResponse {
   pagination: {
-    limit: number,
-    page: number,
-    total: number,
-    totalPages: number
-  }
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
   tables: Table[];
 }
 
@@ -40,7 +40,8 @@ export const UpdateTable = async (table: UpdateTableInput) => {
   }
 };
 
-export interface CreateTableInput extends Omit<Table, 'id' | 'createdAt' | 'updatedAt' | 'orderId'> {}
+export interface CreateTableInput
+  extends Omit<Table, 'id' | 'createdAt' | 'updatedAt' | 'orderId'> {}
 
 export const CreateTable = async (table: CreateTableInput) => {
   try {
@@ -51,7 +52,6 @@ export const CreateTable = async (table: CreateTableInput) => {
     handleError(error);
   }
 };
-
 
 export const DeleteTable = async (id: string) => {
   try {

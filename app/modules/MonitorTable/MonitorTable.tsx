@@ -64,13 +64,6 @@ const TableMange = () => {
               </div>
             )}
             <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
-              {filteredTables.length === 0 && (
-                <>
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">No tables found</p>
-                  </div>
-                </>
-              )}
               {filteredTables.length > 0 &&
                 filteredTables.map((table) => {
                   const isSelected = selectedTable?.id === table.id;

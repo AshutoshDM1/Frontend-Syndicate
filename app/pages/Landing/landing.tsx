@@ -12,9 +12,9 @@ const Landing = () => {
             <span className="ml-2 text-lg font-medium text-foreground">Restzo</span>
           </Link>
           <div className="flex items-center">
-            <div className="hidden :flex ml-10 space-x-12">
+            <div className="flex ml-10 space-x-12">
               <Link
-                to="/products"
+                to="/#"
                 className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
@@ -23,7 +23,7 @@ const Landing = () => {
                 Products
               </Link>
               <Link
-                to="/solutions"
+                to="/#"
                 className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
@@ -32,7 +32,7 @@ const Landing = () => {
                 Solutions
               </Link>
               <Link
-                to="/learn"
+                to="/#"
                 className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
@@ -41,7 +41,7 @@ const Landing = () => {
                 Learn
               </Link>
               <Link
-                to="/blog"
+                to="/#"
                 className="text-sm font-medium flex items-center gap-2 text-muted-foreground hover:text-foreground"
               >
                 <span>
@@ -55,7 +55,7 @@ const Landing = () => {
             <div className="hidden sm:flex items-center justify-end md:flex-1 lg:w-0">
               <Link
                 to="/login"
-                className="whitespace-nowrap text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-2"
+                className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-secondary/80 "
               >
                 Login
               </Link>

@@ -16,8 +16,6 @@ const MenuCard = ({
   handleItemClick: (item: MenuItem) => void;
   handleDeleteMenuItem: (itemId: string) => void;
 }) => {
-
-
   return (
     <>
       <Card

@@ -12,7 +12,13 @@ interface CartPanelProps {
   totalAmount: number;
 }
 
-const CartPanel = ({ cart, handleNext, onUpdateQuantity, onRemoveItem, totalAmount }: CartPanelProps) => {
+const CartPanel = ({
+  cart,
+  handleNext,
+  onUpdateQuantity,
+  onRemoveItem,
+  totalAmount,
+}: CartPanelProps) => {
   if (cart.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
@@ -49,17 +55,15 @@ const CartPanel = ({ cart, handleNext, onUpdateQuantity, onRemoveItem, totalAmou
           <span>Total Amount:</span>
           <span className="text-primary">${totalAmount.toFixed(2)}</span>
         </div>
-          <Button
-          onClick={handleNext}
-          className='bg-primary text-white w-full' >
-            Next
-          </Button>
+        <Button onClick={handleNext} className="bg-primary text-white w-full">
+          Next
+        </Button>
       </div>
     </div>
   );
 };
 
-export default CartPanel;   
+export default CartPanel;
 
 // Cart Item Card Component
 interface CartItemCardProps {

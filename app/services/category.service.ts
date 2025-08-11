@@ -1,14 +1,14 @@
-import type { APIResponse } from "~/types/api.types";
-import api, { handleError } from "./api";
-import type { Category } from "~/store/menuItemState/category.types";
-  
+import type { APIResponse } from '~/types/api.types';
+import api, { handleError } from './api';
+import type { Category } from '~/store/menuItemState/category.types';
+
 export interface CategoryApiResponse {
   pagination: {
-    limit: number,
-    page: number,
-    total: number,
-    totalPages: number
-  }
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
   categories: Category[];
 }
 

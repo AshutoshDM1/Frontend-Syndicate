@@ -12,7 +12,7 @@ export interface OrderItem {
 export interface MakeOrderType {
   tableId: string;
   customerName: string;
-  customerPhone: number;
+  customerPhone: string;
   totalAmount: number;
   status: OrderStatus;
   paymentMethod: PaymentMethod;

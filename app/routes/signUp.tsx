@@ -1,11 +1,8 @@
 import SignupDialog from '~/pages/SignUp/SignupDialog';
+import { GuestRoute } from '~/lib/ProtectedRoute';
 
 const Signup = () => {
-  return (
-    <>
-      <SignupDialog />
-    </>
-  );
+  return <SignupDialog />;
 };
 
 export default Signup;

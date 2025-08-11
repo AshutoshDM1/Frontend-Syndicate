@@ -1,4 +1,4 @@
-export enum UserRole {
+export enum Role {
   ADMIN = 'ADMIN',
   MANAGER = 'MANAGER',
   ORDER_MANAGER = 'ORDER_MANAGER',
@@ -10,11 +10,9 @@ export interface UserType {
   id: string;
   name: string;
   email: string;
-  phone: string | null;
-  role: UserRole;
-  password: string | null;
-  createdAt: string;
-  updatedAt: string;
-  emailVerified: boolean;
+  role: Role;
   image: string;
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

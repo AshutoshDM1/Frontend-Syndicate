@@ -1,10 +1,5 @@
 import { useEffect } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '~/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { Button } from '~/components/ui/button';
 import { useMenuItemStore } from '~/store/menuItemState/menuItem.state';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
@@ -19,7 +14,6 @@ interface SelectMenuProps {
 }
 
 export function SelectMenu({ open, onClose, onSelect }: SelectMenuProps) {
-
   const { menuItems, setMenuItems } = useMenuItemStore();
   const { isSuccess, data } = useQuery({
     queryKey: ['menuItems'],
@@ -44,9 +38,7 @@ export function SelectMenu({ open, onClose, onSelect }: SelectMenuProps) {
               No menu items found.
             </div>
           ) : (
-            menuItems.map((item) => (
-              <MenuItemCard key={item.id} item={item} />
-            ))
+            menuItems.map((item) => <MenuItemCard key={item.id} item={item} />)
           )}
         </div>
         <div className="flex justify-end mt-4">

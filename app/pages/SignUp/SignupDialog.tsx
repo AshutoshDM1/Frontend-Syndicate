@@ -176,7 +176,7 @@ const SignupDialog = () => {
                 disabled={disabled}
                 onClick={handleGoogleSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 bg-secondary hover:bg-foreground/20 rounded-md cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 bg-secondary dark:hover:bg-foreground/20 hover:bg-foreground/80 rounded-md cursor-pointer"
               >
                 {loadingGoogle && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.google />
@@ -186,7 +186,7 @@ const SignupDialog = () => {
                 disabled={disabled}
                 onClick={handleGithubSignIn}
                 type="button"
-                className="flex items-center justify-center py-2 px-4 border gap-3 bg-secondary hover:bg-foreground/20 rounded-md cursor-pointer"
+                className="flex items-center justify-center py-2 px-4 border gap-3 bg-secondary dark:hover:bg-foreground/20 hover:bg-foreground/80 rounded-md cursor-pointer"
               >
                 {loadingGithub && <Loader className="w-4 h-4 animate-spin" />}
                 <SVG.github />
