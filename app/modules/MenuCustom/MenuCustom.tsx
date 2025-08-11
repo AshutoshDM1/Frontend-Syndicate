@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
-import {
-  DeleteMenuItem,
-} from '~/services/MenuItem.service';
+import { DeleteMenuItem } from '~/services/MenuItem.service';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import { DeleteCategory } from '~/services/category.service';
 import ItemCustomizationDialog from './components/ItemCustomizationDialog';
@@ -17,8 +15,7 @@ import useManuItems from '~/hooks/useManuItems';
 import Loading from '~/components/common/Loading';
 
 const MenuCustom = () => {
-  const { categories, menuItems, comboMeals, isPending, isError, error, refetch } =
-    useManuItems();
+  const { categories, menuItems, comboMeals, isPending, isError, error, refetch } = useManuItems();
 
   // State for dialogs and forms
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -84,7 +81,9 @@ const MenuCustom = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Menu Customization</h1>
-        <p className="text-muted-foreground">Manage your restaurant menu items, categories, and combos with our intuitive interface</p>
+        <p className="text-muted-foreground">
+          Manage your restaurant menu items, categories, and combos with our intuitive interface
+        </p>
       </div>
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-12 gap-6">
         <div className="space-y-3">
@@ -194,27 +193,27 @@ const MenuCustom = () => {
       )}
 
       {/* Menu Items Grid */}
-        {isPending && (
-          <div className="flex justify-center items-center h-full w-full mt-10">
-            <Loading />
-          </div>
-        )}
-        {isError && (
-          <div className="flex justify-center items-center h-full">
-            <p className="text-muted-foreground">Error: {error?.message}</p>
-          </div>
-        )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-
-        {filteredItems.length > 0 && filteredItems.map((item) => (
-          <MenuCard
-            item={item}
-            setEditingItem={setEditingItem}
-            setShowEditItemDialog={setShowEditItemDialog}
-            handleItemClick={handleItemClick}
-            handleDeleteMenuItem={handleDeleteMenuItem}
-          />
-        ))}
+      {isPending && (
+        <div className="flex justify-center items-center h-full w-full mt-10">
+          <Loading />
+        </div>
+      )}
+      {isError && (
+        <div className="flex justify-center items-center h-full">
+          <p className="text-muted-foreground">Error: {error?.message}</p>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        {filteredItems.length > 0 &&
+          filteredItems.map((item) => (
+            <MenuCard
+              item={item}
+              setEditingItem={setEditingItem}
+              setShowEditItemDialog={setShowEditItemDialog}
+              handleItemClick={handleItemClick}
+              handleDeleteMenuItem={handleDeleteMenuItem}
+            />
+          ))}
       </div>
       {/* Item Customization Dialog */}
       <ItemCustomizationDialog

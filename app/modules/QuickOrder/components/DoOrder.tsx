@@ -3,12 +3,7 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Badge } from '~/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
-import {
-  ArrowLeft,
-  ShoppingCart,
-  Plus,
-  Receipt,
-} from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Plus, Receipt } from 'lucide-react';
 import type { Table } from '~/store/tableState/table.types';
 import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 import { MenuItemCard } from '~/components/common/MenuItemCard';
@@ -19,6 +14,7 @@ import CartPanel from './CartPanel';
 import OrderPanel from './OrderPanel';
 import ComboMealCard from '~/modules/MenuCustom/components/ComboMealCard';
 import useManuItems from '~/hooks/useManuItems';
+import { toast } from 'sonner';
 
 enum CartItemType {
   MENU_ITEM = 'menuItem',
@@ -105,7 +101,7 @@ const DoOrder = ({
       const MakeOrderData: MakeOrderType = {
         tableId: selectedTable.id || '',
         customerName,
-        customerPhone: parseInt(customerPhone),
+        customerPhone: customerPhone.toString(),
         totalAmount: getTotalAmount(),
         status: OrderStatus.STARTED,
         paymentMethod: PaymentMethod.CASH,
@@ -116,7 +112,10 @@ const DoOrder = ({
         })),
       };
 
-      await MakeOrder(MakeOrderData);
+      const response = await MakeOrder(MakeOrderData);
+      if (response?.statusCode === 200) {
+        toast.success('Order submitted successfully');
+      }
 
       // Clear cart and reset form
       setCart([]);
@@ -164,7 +163,7 @@ const DoOrder = ({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col-reverse xl:flex-row"> 
+      <div className="flex-1 flex flex-col-reverse xl:flex-row">
         {/* Left Panel - Menu */}
         <div className="max-h-[87vh] flex-1 flex flex-col overflow-y-auto">
           {/* Search and Filters */}

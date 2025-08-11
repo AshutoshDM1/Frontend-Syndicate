@@ -1,8 +1,14 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
-import type { MenuItem } from "~/store/menuItemState/menuItem.types";
-import { useState } from "react";
-import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from '~/components/ui/dialog';
+import { Button } from '~/components/ui/button';
+import type { MenuItem } from '~/store/menuItemState/menuItem.types';
+import { useState } from 'react';
+import { Checkbox } from '~/components/ui/checkbox';
 
 const ItemCustomizationDialog = ({
   showItemDialog,
@@ -30,7 +36,9 @@ const ItemCustomizationDialog = ({
   const toggleModifier = (modifierId: string) => {
     setSelectedModifiers((prev) => {
       console.log(prev);
-      return prev.includes(modifierId) ? prev.filter((id) => id !== modifierId) : [...prev, modifierId]
+      return prev.includes(modifierId)
+        ? prev.filter((id) => id !== modifierId)
+        : [...prev, modifierId];
     });
   };
   return (
@@ -62,7 +70,7 @@ const ItemCustomizationDialog = ({
                       >
                         <div className="flex items-center">
                           <Checkbox
-                          className="mr-2 mt-1" 
+                            className="mr-2 mt-1"
                             checked={selectedModifiers.includes(modifier.id)}
                             onCheckedChange={() => toggleModifier(modifier.id)}
                           />

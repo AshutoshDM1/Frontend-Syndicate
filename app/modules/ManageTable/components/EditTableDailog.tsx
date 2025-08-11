@@ -2,12 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '~/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import {
@@ -87,9 +82,9 @@ const EditTableDailog = ({ open, setOpen, table, mode, onSuccuss }: EditTableDia
       if (mode === 'add') {
         const response = await CreateTable(updatedTable);
         if (response?.statusCode === 201) {
-            toast.success('Table updated successfully');
-            onSuccuss();
-          } 
+          toast.success('Table updated successfully');
+          onSuccuss();
+        }
       }
       if (mode === 'edit' && table) {
         const response = await UpdateTable({
@@ -99,7 +94,7 @@ const EditTableDailog = ({ open, setOpen, table, mode, onSuccuss }: EditTableDia
         if (response?.statusCode === 201) {
           toast.success('Table updated successfully');
           onSuccuss();
-        } 
+        }
       }
     } catch (error) {
       console.log(error);

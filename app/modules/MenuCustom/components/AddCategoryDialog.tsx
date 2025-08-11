@@ -50,7 +50,7 @@ const AddCategoryDialog = ({
   return (
     <>
       <Dialog open={showCategoryDialog} onOpenChange={setShowCategoryDialog}>
-        <DialogContent className='w-full max-w-md' >
+        <DialogContent className="w-full max-w-md">
           <DialogClose onClick={() => setShowCategoryDialog(false)} />
           <DialogHeader>
             <DialogTitle>Add New Category</DialogTitle>
@@ -74,14 +74,17 @@ const AddCategoryDialog = ({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setShowCategoryDialog(false);
-              setNewCategory({
-                name: '',
-                description: '',
-                isActive: true,
-              });
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowCategoryDialog(false);
+                setNewCategory({
+                  name: '',
+                  description: '',
+                  isActive: true,
+                });
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={handleAddCategory}>Add Category</Button>

@@ -75,7 +75,7 @@ const SelectTable = ({ setShowTable }: { setShowTable: (show: boolean) => void }
           <Card className="p-8  min-h-[70vh] max-h-[70vh] w-full overflow-y-auto bg-card border-border custom-scrollbar overflow-x-hidden">
             {isPending && (
               <div className="flex items-center justify-center h-full">
-                <Loading/>
+                <Loading />
               </div>
             )}
             {isError && (
@@ -84,13 +84,6 @@ const SelectTable = ({ setShowTable }: { setShowTable: (show: boolean) => void }
               </div>
             )}
             <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3  gap-12 place-items-center">
-              {filteredTables.length === 0 && (
-                <>
-                  <div className="flex items-center justify-center h-full">
-                    <p className="text-muted-foreground">No tables found</p>
-                  </div>
-                </>
-              )}
               {filteredTables.length > 0 &&
                 filteredTables.map((table) => {
                   const isSelected = selectedTable?.id === table.id;

@@ -18,7 +18,7 @@ const QuickOrder = () => {
             initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
           >
             <SelectTable setShowTable={setShowTable} />
           </motion.div>
@@ -29,12 +29,9 @@ const QuickOrder = () => {
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
           >
-            <DoOrder
-              selectedTable={selectedTable}
-              onBack={() => setShowTable(true)}
-            />
+            <DoOrder selectedTable={selectedTable} onBack={() => setShowTable(true)} />
           </motion.div>
         )}
       </AnimatePresence>

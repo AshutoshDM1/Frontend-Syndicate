@@ -12,7 +12,7 @@ export interface MenuItem {
   calories: number;
   isVegetarian: boolean;
   isVegan: boolean;
-  isGlutenFree: boolean;  
+  isGlutenFree: boolean;
   isSpicy: boolean;
   sortOrder: number;
   createdAt: string;

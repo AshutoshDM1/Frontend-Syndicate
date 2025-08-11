@@ -1,5 +1,5 @@
-import { Card, CardContent } from "~/components/ui/card";
-import type { MenuItem } from "~/store/menuItemState/menuItem.types";
+import { Card, CardContent } from '~/components/ui/card';
+import type { MenuItem } from '~/store/menuItemState/menuItem.types';
 
 interface MenuItemCardProps {
   item: MenuItem;

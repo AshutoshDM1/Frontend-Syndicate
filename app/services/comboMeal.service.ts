@@ -1,14 +1,14 @@
-import type { APIResponse } from "~/types/api.types";
-import api, { handleError } from "./api";
-import type { ComboMeal } from "~/store/menuItemState/comboMeal.types";
-  
+import type { APIResponse } from '~/types/api.types';
+import api, { handleError } from './api';
+import type { ComboMeal } from '~/store/menuItemState/comboMeal.types';
+
 export interface ComboMealApiResponse {
   pagination: {
-    limit: number,
-    page: number,
-    total: number,
-    totalPages: number
-  }
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
   comboMeals: ComboMeal[];
 }
 
@@ -31,5 +31,3 @@ export const CreateComboMeal = async (comboMeal: ComboMeal) => {
     handleError(error);
   }
 };
-
-

@@ -15,6 +15,8 @@ import SidebarLink from '~/components/SidebarLink';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet';
 import { authClient, useSession } from '~/lib/auth-client';
+import ThemeToggleButton from '~/components/ui/theme-toggle-button';
+import { Role } from '~/types/user.types';
 
 const Sidebar = () => {
   const { signOut } = authClient;
@@ -28,33 +30,56 @@ const Sidebar = () => {
       icon: <LayoutDashboard size={20} />,
       label: 'Dashboard',
       href: '/dashboard',
+      allowedRoles: [
+        Role.ADMIN,
+        Role.MANAGER,
+        Role.ORDER_MANAGER,
+        Role.KITCHEN_MANAGER,
+        Role.CUSTOMER,
+      ],
     },
     ManageUser: {
       icon: <UserIcon size={20} />,
       label: 'Manage User',
       href: '/dashboard/manage-user',
+      allowedRoles: [Role.ADMIN],
     },
     MonitorTables: {
       icon: <TableIcon size={20} />,
       label: 'Monitor Tables',
       href: '/dashboard/monitor-tables',
+      allowedRoles: [Role.ADMIN, Role.MANAGER, Role.ORDER_MANAGER, Role.KITCHEN_MANAGER],
     },
     TableManagement: {
       icon: <TableIcon size={20} />,
       label: 'Table Management',
       href: '/dashboard/manage-table',
+      allowedRoles: [Role.ADMIN, Role.MANAGER, Role.ORDER_MANAGER, Role.KITCHEN_MANAGER],
     },
     MenuCustom: {
       icon: <AppWindow size={20} />,
       label: 'Menu Customization',
       href: '/dashboard/menu-custom',
+      allowedRoles: [Role.ADMIN, Role.MANAGER, Role.ORDER_MANAGER, Role.KITCHEN_MANAGER],
     },
     QuickOrder: {
       icon: <ShoppingCart size={20} />,
       label: 'Quick Order',
       href: '/dashboard/quick-order',
+      allowedRoles: [
+        Role.ADMIN,
+        Role.MANAGER,
+        Role.ORDER_MANAGER,
+        Role.KITCHEN_MANAGER,
+        Role.CUSTOMER,
+      ],
     },
   };
+
+  const userRole = (session as any)?.user?.role as Role | undefined;
+  const allowedLinks = Object.values(NavLink).filter((link) =>
+    userRole ? link.allowedRoles.includes(userRole) : false
+  );
 
   const handleLinkClick = () => {
     setIsOpen(false);
@@ -70,7 +95,7 @@ const Sidebar = () => {
             <h1 className="text-lg font-semibold text-foreground ">Restzo</h1>
           </div>
           <nav className="space-y-3 flex flex-col gap-1 w-full">
-            {Object.values(NavLink).map((link) => (
+            {allowedLinks.map((link) => (
               <SidebarLink key={link.label} {...link} isActive={location.pathname === link.href} />
             ))}
           </nav>{' '}
@@ -78,23 +103,30 @@ const Sidebar = () => {
         <div className="flex flex-col gap-1 w-full">
           {session ? (
             <>
-              <div className="flex items-center gap-4 pb-4">
-                <img 
-                  src={session?.user?.image || '/favicon.png'} 
-                  alt={`${session?.user?.name || 'User'} avatar`} 
-                  className="w-10 h-10 rounded-full object-cover"
+              <div className="flex items-center justify-between gap-4 pb-4">
+                <h1 className="text-md font-medium text-foreground line-clamp-1 ml-3">
+                  {session?.user?.name}
+                </h1>
+                <ThemeToggleButton variant="circle-blur" start="bottom-left" />
+                <img
+                  src={session?.user?.image || '/favicon.png'}
+                  alt={`${session?.user?.name || 'User'} avatar`}
+                  className="w-10 h-10 rounded-full object-cover hidden"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/favicon.png';
                   }}
                 />
-                <h1 className="text-md font-medium text-foreground ">{session?.user?.name}</h1>
               </div>
-              <Button variant="outline" size="sm" className="w-full" onClick={() => {
-                signOut()
-                navigate('/login')
-              }
-              }>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full flex items-center justify-center py-2 px-4 border gap-3 bg-primary text-primary-foreground dark:hover:bg-secondary/20 hover:bg-primary/80 rounded-md cursor-pointer"
+                onClick={() => {
+                  signOut();
+                  navigate('/login');
+                }}
+              >
                 <LogOut size={20} />
                 Logout
               </Button>
@@ -103,7 +135,7 @@ const Sidebar = () => {
             <div className="flex flex-col items-center gap-4 pb-4">
               <Button
                 size="sm"
-                className="bg-foreground/30 hover:bg-foreground/40 text-foreground w-full"
+                className="w-full flex items-center justify-center py-2 px-4 border gap-3 bg-primary text-primary-foreground dark:hover:bg-primary/20 hover:bg-primary/80 rounded-md cursor-pointer"
                 onClick={() => navigate('/signup')}
               >
                 <UserPlus size={20} />
@@ -111,7 +143,7 @@ const Sidebar = () => {
               </Button>
               <Button
                 size="sm"
-                className="bg-primary text-primary-foreground w-full"
+                className="w-full flex items-center justify-center py-2 px-4 border gap-3 bg-secondary dark:hover:bg-foreground/20 hover:bg-foreground/80 rounded-md cursor-pointer"
                 onClick={() => navigate('/login')}
               >
                 <LogIn size={20} />
@@ -128,16 +160,14 @@ const Sidebar = () => {
         <div className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border shadow-lg z-50">
           <div className="safe-area-pb">
             <nav className="flex justify-around items-center px-2 py-1">
-              {Object.values(NavLink)
-                .slice(0, 3)
-                .map((link) => (
-                  <SidebarLink
-                    key={link.label}
-                    {...link}
-                    isActive={location.pathname === link.href}
-                    isMobile={true}
-                  />
-                ))}
+              {allowedLinks.slice(0, 3).map((link) => (
+                <SidebarLink
+                  key={link.label}
+                  {...link}
+                  isActive={location.pathname === link.href}
+                  isMobile={true}
+                />
+              ))}
               {/* More Menu for additional items */}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
@@ -155,7 +185,7 @@ const Sidebar = () => {
                     <h2 className="text-lg font-semibold text-foreground p-4 ">Navigation Menu</h2>
                   </div>
                   <nav className="space-y-3">
-                    {Object.values(NavLink).map((link) => (
+                    {allowedLinks.map((link) => (
                       <div key={link.label} onClick={handleLinkClick}>
                         <SidebarLink {...link} isActive={location.pathname === link.href} />
                       </div>
