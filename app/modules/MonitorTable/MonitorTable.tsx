@@ -8,6 +8,7 @@ import HeadingTable from './components/HeadingTable';
 import TableSVG from './components/TableSVG';
 import useTable from '~/hooks/useTable';
 import Loading from '~/components/common/Loading';
+import { AdminRoute } from '~/lib/ProtectedRoute';
 
 const TableMange = () => {
   const { selectedTable, setSelectedTable } = useTableStore();
@@ -24,6 +25,7 @@ const TableMange = () => {
 
   return (
     <>
+     <AdminRoute>
       <div>
         {/* Header */}
         <div className="mb-8">
@@ -82,6 +84,7 @@ const TableMange = () => {
           </Card>
         </div>
       </div>
+    </AdminRoute>
     </>
   );
 };
